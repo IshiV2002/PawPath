@@ -1,0 +1,49 @@
+{
+  "candidate": {
+    "candidate_id": "random_forest_2_ordinary",
+    "family": "random_forest",
+    "balanced": false,
+    "params": {
+      "n_estimators": 200,
+      "max_depth": null,
+      "min_samples_leaf": 2,
+      "max_features": "sqrt",
+      "n_jobs": 1,
+      "random_state": 42
+    }
+  },
+  "alert_threshold": 0.2,
+  "positive_class": 1,
+  "target": "long_stay_30",
+  "target_definition": "stay longer than 30 days",
+  "model_selection": "mean AP across three training-only temporal folds",
+  "threshold_selection": "maximum validation F2; ties: precision then higher cutoff",
+  "fit_rows": 6096,
+  "validation_rows": 1163,
+  "raw_input_fields": [
+    "type",
+    "breed",
+    "color",
+    "sex",
+    "date_of_birth",
+    "intake_date",
+    "intake_type",
+    "intake_subtype",
+    "intake_condition",
+    "intake_jurisdiction"
+  ],
+  "probabilities_calibrated": false,
+  "calibration_assessed": true,
+  "test_evaluated": false,
+  "model_sha256": "0b16728328a1624c20d53a81811ff06b2bd5ac554c9ff25a56ecad2efc73837f",
+  "helper_sha256": "06cc7842b907623335978b986d8a6c8bafe905ebe15ab07dab1fd5d192f59dd8",
+  "versions": {
+    "pandas": "3.0.1",
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "joblib": "1.6.0",
+    "matplotlib": "3.11.2"
+  },
+  "created_utc": "2026-09-28T09:15:34.070857+00:00"
+}

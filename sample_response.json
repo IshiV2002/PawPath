@@ -1,0 +1,15 @@
+{
+  "long_stay_score": 0.10569201413648383,
+  "alert": false,
+  "predicted_stay_group": "30_DAYS_OR_LESS",
+  "decision": "No alert at the current cutoff",
+  "threshold": 0.2,
+  "model_name": "random_forest_2_ordinary",
+  "target": "Stay longer than 30 days",
+  "age_estimated": false,
+  "data_notes": [
+    "Details recorded as unknown: intake_condition."
+  ],
+  "score_note": "Model score, not a calibrated probability. Staff must make the care decision.",
+  "scope": "Academic prototype using Sonoma County, California, USA data."
+}

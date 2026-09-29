@@ -1,0 +1,138 @@
+[
+  {
+    "case": 8029,
+    "input": {
+      "type": "CAT",
+      "breed": "DOMESTIC SH",
+      "color": "BLACK",
+      "sex": "Unknown",
+      "date_of_birth": "2025-01-09",
+      "intake_date": "2026-01-02",
+      "intake_type": "STRAY",
+      "intake_subtype": "OVER THE COUNTER",
+      "intake_condition": "UNKNOWN",
+      "intake_jurisdiction": "COUNTY"
+    },
+    "expected_score": 0.1403577734765395,
+    "expected_alert": false
+  },
+  {
+    "case": 8031,
+    "input": {
+      "type": "DOG",
+      "breed": "AUST CATTLE DOG/MIX",
+      "color": "TRICOLOR/BLACK",
+      "sex": "Male",
+      "date_of_birth": "2025-07-03",
+      "intake_date": "2026-01-02",
+      "intake_type": "STRAY",
+      "intake_subtype": "FIELD",
+      "intake_condition": "UNKNOWN",
+      "intake_jurisdiction": "COUNTY"
+    },
+    "expected_score": 0.1762783171664833,
+    "expected_alert": false
+  },
+  {
+    "case": 8037,
+    "input": {
+      "type": "DOG",
+      "breed": "GERM SHEPHERD",
+      "color": "BLACK/BROWN",
+      "sex": "Female",
+      "date_of_birth": "2023-01-03",
+      "intake_date": "2026-01-03",
+      "intake_type": "STRAY",
+      "intake_subtype": "OVER THE COUNTER",
+      "intake_condition": "UNKNOWN",
+      "intake_jurisdiction": "SANTA ROSA"
+    },
+    "expected_score": 0.1428053610493473,
+    "expected_alert": false
+  },
+  {
+    "case": 8039,
+    "input": {
+      "type": "DOG",
+      "breed": "ALASKAN HUSKY",
+      "color": "WHITE",
+      "sex": "Neutered",
+      "date_of_birth": null,
+      "intake_date": "2026-01-03",
+      "intake_type": "QUARANTINE",
+      "intake_subtype": "FIELD",
+      "intake_condition": "UNKNOWN",
+      "intake_jurisdiction": "COUNTY"
+    },
+    "expected_score": 0.1435752089935405,
+    "expected_alert": false
+  },
+  {
+    "case": 8019,
+    "input": {
+      "type": "DOG",
+      "breed": "DOBERMAN PINSCH/BELG SHEEPDOG",
+      "color": "BLACK/BROWN",
+      "sex": "Male",
+      "date_of_birth": "2017-10-20",
+      "intake_date": "2026-01-01",
+      "intake_type": "STRAY",
+      "intake_subtype": "FIELD",
+      "intake_condition": "HEALTHY",
+      "intake_jurisdiction": "SANTA ROSA"
+    },
+    "expected_score": 0.5437753033342917,
+    "expected_alert": true
+  },
+  {
+    "case": 8020,
+    "input": {
+      "type": "DOG",
+      "breed": "AUST SHEPHERD",
+      "color": "BLUE MERLE",
+      "sex": "Spayed",
+      "date_of_birth": "2018-07-17",
+      "intake_date": "2026-01-01",
+      "intake_type": "STRAY",
+      "intake_subtype": "FIELD",
+      "intake_condition": "TREATABLE/REHAB",
+      "intake_jurisdiction": "SANTA ROSA"
+    },
+    "expected_score": 0.4136842617358997,
+    "expected_alert": true
+  },
+  {
+    "case": 8021,
+    "input": {
+      "type": "DOG",
+      "breed": "LABRADOR RETR/GERM SHEPHERD",
+      "color": "BLACK",
+      "sex": "Spayed",
+      "date_of_birth": "2024-12-12",
+      "intake_date": "2026-01-01",
+      "intake_type": "STRAY",
+      "intake_subtype": "OVER THE COUNTER",
+      "intake_condition": "UNKNOWN",
+      "intake_jurisdiction": "COUNTY"
+    },
+    "expected_score": 0.3054738589504885,
+    "expected_alert": true
+  },
+  {
+    "case": 8022,
+    "input": {
+      "type": "DOG",
+      "breed": "PIT BULL/MIX",
+      "color": "BR BRINDLE",
+      "sex": "Female",
+      "date_of_birth": null,
+      "intake_date": "2026-01-02",
+      "intake_type": "STRAY",
+      "intake_subtype": "FIELD",
+      "intake_condition": "HEALTHY",
+      "intake_jurisdiction": "SANTA ROSA"
+    },
+    "expected_score": 0.3271443719238328,
+    "expected_alert": true
+  }
+]

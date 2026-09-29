@@ -1,0 +1,12 @@
+{
+  "type": "DOG",
+  "breed": "LABRADOR RETR",
+  "color": "BLACK",
+  "sex": "MALE",
+  "date_of_birth": "2023-01-01",
+  "intake_date": "2026-01-10",
+  "intake_type": "STRAY",
+  "intake_subtype": "FIELD",
+  "intake_condition": "UNKNOWN",
+  "intake_jurisdiction": "SANTA ROSA"
+}

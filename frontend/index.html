@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf6f2">
+  <title>PawPath · 30-day shelter stay prediction</title>
+  <link rel="icon" href="/static/assets/paw.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="PawPath home"><span class="brand-mark" aria-hidden="true">✿</span><span>Paw<span class="brand-accent">Path</span></span></a>
+      <div class="topbar-right"><span class="project-tag">KND_04 · FDM PROJECT</span><a href="/docs" class="docs-link">API docs <span aria-hidden="true">↗</span></a></div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <span class="eyebrow"><span class="eyebrow-dot"></span> A LITTLE MORE SUPPORT, RIGHT ON TIME</span>
+          <h1 id="hero-title">Every animal deserves <em>a good start.</em></h1>
+          <p>Enter an animal’s intake details to predict whether their stay will be more than 30 days.</p>
+          <a class="hero-link" href="#check-animal">Make a prediction <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true"><span class="art-sun"></span><span class="art-squiggle">✳</span><span class="art-sparkle">✦</span><img src="/static/assets/animal-friends.png" alt="" width="600" height="600"></div>
+        <div class="hero-sticker sticker-one" aria-hidden="true">made with<br><span>♡</span> for paws</div>
+      </section>
+
+      <div class="intro-row"><div><span class="section-kicker">HOW IT WORKS</span><h2>Will they stay over 30 days?</h2></div><p>Choose the animal type and intake date. If you select Other, tell us which animal it is.</p></div>
+
+      <section class="workspace" id="check-animal" aria-label="Animal stay checker">
+        <div class="form-card">
+          <div class="card-heading"><span class="card-icon" aria-hidden="true">✿</span><div><span class="step-label">STEP 01 / 02</span><h2>Tell us about this animal</h2><p>Use the details known at intake. Blank optional fields are treated as unknown.</p></div></div>
+          <form id="animal-form" novalidate>
+            <fieldset class="animal-choice"><legend>Who are we checking? <span class="required">*</span></legend><div class="choice-grid">
+              <label class="choice"><input type="radio" name="type" value="DOG" checked><span class="choice-body"><span class="choice-art dog-art" aria-hidden="true">🐶</span><strong>Dog</strong></span></label>
+              <label class="choice"><input type="radio" name="type" value="CAT"><span class="choice-body"><span class="choice-art cat-art" aria-hidden="true">🐱</span><strong>Cat</strong></span></label>
+              <label class="choice"><input type="radio" name="type" value="OTHER"><span class="choice-body"><span class="choice-art other-art" aria-hidden="true">🐰</span><strong>Other</strong></span></label>
+            </div></fieldset>
+            <div id="other-animal-field" class="other-animal-field" hidden>
+              <label class="field" for="other_animal">What animal is it? <span class="required">*</span></label>
+              <input id="other_animal" name="other_animal" type="text" maxlength="60" placeholder="e.g. Rabbit, bird, guinea pig" autocomplete="off">
+              <p class="field-hint">The name appears in the result. The model groups these animals as “Other.”</p>
+            </div>
+
+            <div class="form-section"><div class="form-section-title"><span class="mini-number">01</span><div><h3>Arrival details</h3><p>The date the animal came to the shelter.</p></div></div>
+              <div class="field-grid"><label class="field">Intake date <span class="required">*</span><input id="intake_date" name="intake_date" type="date" required></label><label class="field">Date of birth <span class="optional">optional</span><input id="date_of_birth" name="date_of_birth" type="date"><small>Leave blank if unknown.</small></label></div>
+              <div class="field-grid"><label class="field">How they arrived <span class="optional">optional</span><select name="intake_type"><option value="">Unknown / not recorded</option><option value="STRAY">Stray</option><option value="OWNER SURRENDER">Owner surrender</option><option value="TRANSFER">Transfer</option><option value="ADOPTION RETURN">Adoption return</option><option value="OTHER">Other</option></select></label><label class="field">Arrival detail <span class="optional">optional</span><input name="intake_subtype" type="text" maxlength="120" placeholder="e.g. Field, walk-in"></label></div>
+            </div>
+
+            <details class="more-details"><summary><span><span class="plus" aria-hidden="true">＋</span> Add more details <small>Helpful if you know them</small></span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="details-content">
+              <div class="field-grid"><label class="field">Breed <span class="optional">optional</span><input name="breed" type="text" maxlength="120" placeholder="e.g. Labrador Retr"></label><label class="field">Color <span class="optional">optional</span><input name="color" type="text" maxlength="120" placeholder="e.g. Black"></label></div>
+              <div class="field-grid"><label class="field">Sex <span class="optional">optional</span><select name="sex"><option value="UNKNOWN">Unknown</option><option value="MALE">Male</option><option value="FEMALE">Female</option></select></label><label class="field">Condition at intake <span class="optional">optional</span><input name="intake_condition" type="text" maxlength="120" placeholder="e.g. Healthy"></label></div>
+              <label class="field">Intake area / jurisdiction <span class="optional">optional</span><input name="intake_jurisdiction" type="text" maxlength="120" placeholder="e.g. Santa Rosa"></label>
+            </div></details>
+
+            <div class="form-actions"><button class="submit-btn" id="submit-btn" type="submit"><span id="submit-label">Predict stay</span><span aria-hidden="true">↗</span></button><button class="text-btn" id="example-btn" type="button">Try an example</button><button class="text-btn" id="clear-btn" type="button">Clear form</button></div>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+          </form>
+        </div>
+
+        <aside class="result-column" aria-label="Prediction result">
+          <div class="result-card" id="result-card" aria-live="polite">
+            <div class="card-heading result-heading"><span class="card-icon lavender-icon" aria-hidden="true">✧</span><div><span class="step-label">STEP 02 / 02</span><h2>Your result</h2></div></div>
+            <div id="empty-state" class="empty-state"><div class="empty-art" aria-hidden="true"><span>🐾</span><i>✦</i></div><h3>Ready when you are!</h3><p>Fill in the details to see the predicted 30-day stay group.</p></div>
+            <div id="loading-state" class="loading-state" hidden><div class="spinner" aria-hidden="true"></div><h3>Checking the details…</h3><p>Just a moment.</p></div>
+            <div id="prediction-state" class="prediction-state" hidden><div id="prediction-banner" class="prediction-banner"><span id="result-art" class="result-art" aria-hidden="true">🐾</span><p id="result-animal" class="result-animal" hidden></p><span class="prediction-caption">MODEL PREDICTION</span><h3 id="result-title"></h3><p id="result-message" class="result-message"></p></div><p class="result-footnote">This is a prediction, not a guarantee. The model was trained on Sonoma County, California shelter records.</p></div>
+          </div>
+          <div class="aside-note"><span class="aside-icon" aria-hidden="true">♡</span><div><strong>Made for shelter teams</strong><p>Based on Sonoma County, California, USA data. This is a student prototype, not a deployed shelter tool.</p></div></div>
+        </aside>
+      </section>
+    </main>
+    <footer><span>✿ PawPath <span class="footer-sep">·</span> KND_04</span><span>Predicting stays over 30 days from intake details.</span><a href="/docs">API docs ↗</a></footer>
+  </div>
+</body>
+</html>
