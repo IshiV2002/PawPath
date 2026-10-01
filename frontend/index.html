@@ -47,16 +47,41 @@
 
             <div class="form-section"><div class="form-section-title"><span class="mini-number">01</span><div><h3>Arrival details</h3><p>The date the animal came to the shelter.</p></div></div>
               <div class="field-grid"><label class="field">Intake date <span class="required">*</span><input id="intake_date" name="intake_date" type="date" required></label><label class="field">Date of birth <span class="optional">optional</span><input id="date_of_birth" name="date_of_birth" type="date"><small>Leave blank if unknown.</small></label></div>
-              <div class="field-grid"><label class="field">How they arrived <span class="optional">optional</span><select name="intake_type"><option value="">Unknown / not recorded</option><option value="STRAY">Stray</option><option value="OWNER SURRENDER">Owner surrender</option><option value="TRANSFER">Transfer</option><option value="ADOPTION RETURN">Adoption return</option><option value="OTHER">Other</option></select></label><label class="field">Arrival detail <span class="optional">optional</span><input name="intake_subtype" type="text" maxlength="120" placeholder="e.g. Field, walk-in"></label></div>
+              <div class="field-grid"><label class="field">How they arrived <span class="optional">optional</span><select name="intake_type"><option value="">Unknown / not recorded</option><option value="STRAY">Stray</option><option value="OWNER SURRENDER">Owner surrender</option><option value="TRANSFER">Transfer</option><option value="ADOPTION RETURN">Adoption return</option><option value="OTHER">Other</option></select></label><label class="field">Arrival detail <span class="optional">optional</span><input name="intake_subtype" list="subtypes-list" type="text" maxlength="120" placeholder="e.g. Field, walk-in"><datalist id="subtypes-list"><option value="OVER THE COUNTER"><option value="FIELD"><option value="COMM CAT"><option value="BORN_HERE"><option value="PHONE"></datalist></label></div>
             </div>
 
             <details class="more-details"><summary><span><span class="plus" aria-hidden="true">＋</span> Add more details <small>Helpful if you know them</small></span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="details-content">
-              <div class="field-grid"><label class="field">Breed <span class="optional">optional</span><input name="breed" type="text" maxlength="120" placeholder="e.g. Labrador Retr"></label><label class="field">Color <span class="optional">optional</span><input name="color" type="text" maxlength="120" placeholder="e.g. Black"></label></div>
-              <div class="field-grid"><label class="field">Sex <span class="optional">optional</span><select name="sex"><option value="UNKNOWN">Unknown</option><option value="MALE">Male</option><option value="FEMALE">Female</option></select></label><label class="field">Condition at intake <span class="optional">optional</span><input name="intake_condition" type="text" maxlength="120" placeholder="e.g. Healthy"></label></div>
-              <label class="field">Intake area / jurisdiction <span class="optional">optional</span><input name="intake_jurisdiction" type="text" maxlength="120" placeholder="e.g. Santa Rosa"></label>
+              <div class="field-grid">
+                <label class="field">Breed <span class="optional">optional</span>
+                  <input name="breed" list="breeds-list" type="text" maxlength="120" placeholder="e.g. Labrador Retr">
+                  <datalist id="breeds-list"></datalist>
+                </label>
+                <label class="field">Color <span class="optional">optional</span>
+                  <input name="color" list="colors-list" type="text" maxlength="120" placeholder="e.g. Black">
+                  <datalist id="colors-list">
+                    <option value="BLACK"><option value="WHITE"><option value="BROWN"><option value="TAN"><option value="BRN TABBY"><option value="BLUE MERLE"><option value="TRICOLOR"><option value="GRAY"><option value="ORANGE TABBY"><option value="BLACK/WHITE"><option value="BROWN/WHITE"><option value="TAN/WHITE">
+                  </datalist>
+                </label>
+              </div>
+              <div class="field-grid">
+                <label class="field">Sex <span class="optional">optional</span>
+                  <select name="sex">
+                    <option value="UNKNOWN">Unknown / not recorded</option>
+                    <option value="MALE">Male (Intact)</option>
+                    <option value="FEMALE">Female (Intact)</option>
+                    <option value="NEUTERED">Neutered (Male)</option>
+                    <option value="SPAYED">Spayed (Female)</option>
+                  </select>
+                </label>
+                <label class="field">Condition at intake <span class="optional">optional</span>
+                  <input name="intake_condition" list="conditions-list" type="text" maxlength="120" placeholder="e.g. Healthy">
+                  <datalist id="conditions-list"><option value="HEALTHY"><option value="TREATABLE/MANAGEABLE"><option value="TREATABLE/REHAB"><option value="UNTREATABLE"><option value="UNKNOWN"><option value="PENDING"></datalist>
+                </label>
+              </div>
+              <label class="field">Intake area / jurisdiction <span class="optional">optional</span><input name="intake_jurisdiction" list="jurisdictions-list" type="text" maxlength="120" placeholder="e.g. Santa Rosa"><datalist id="jurisdictions-list"><option value="SANTA ROSA"><option value="COUNTY"><option value="OUT OF COUNTY"><option value="ROHNERT PARK"><option value="PETALUMA"><option value="WINDSOR"><option value="HEALDSBURG"><option value="SEBASTOPOL"><option value="SONOMA"></datalist></label>
             </div></details>
 
-            <div class="form-actions"><button class="submit-btn" id="submit-btn" type="submit"><span id="submit-label">Predict stay</span><span aria-hidden="true">↗</span></button><button class="text-btn" id="example-btn" type="button">Try an example</button><button class="text-btn" id="clear-btn" type="button">Clear form</button></div>
+            <div class="form-actions"><button class="submit-btn" id="submit-btn" type="submit"><span id="submit-label">Predict stay</span><span aria-hidden="true">↗</span></button><button class="text-btn" id="example-btn" type="button">Example (Low Stay: ≤30d)</button><button class="text-btn" id="example-alert-btn" type="button">Example (Long Stay: &gt;30d)</button><button class="text-btn" id="clear-btn" type="button">Clear form</button></div>
             <p id="form-error" class="form-error" role="alert" hidden></p>
           </form>
         </div>
@@ -66,9 +91,40 @@
             <div class="card-heading result-heading"><span class="card-icon lavender-icon" aria-hidden="true">✧</span><div><span class="step-label">STEP 02 / 02</span><h2>Your result</h2></div></div>
             <div id="empty-state" class="empty-state"><div class="empty-art" aria-hidden="true"><span>🐾</span><i>✦</i></div><h3>Ready when you are!</h3><p>Fill in the details to see the predicted 30-day stay group.</p></div>
             <div id="loading-state" class="loading-state" hidden><div class="spinner" aria-hidden="true"></div><h3>Checking the details…</h3><p>Just a moment.</p></div>
-            <div id="prediction-state" class="prediction-state" hidden><div id="prediction-banner" class="prediction-banner"><span id="result-art" class="result-art" aria-hidden="true">🐾</span><p id="result-animal" class="result-animal" hidden></p><span class="prediction-caption">MODEL PREDICTION</span><h3 id="result-title"></h3><p id="result-message" class="result-message"></p></div><p class="result-footnote">This is a prediction, not a guarantee. The model was trained on Sonoma County, California shelter records.</p></div>
+            <div id="prediction-state" class="prediction-state" hidden>
+              <div id="prediction-banner" class="prediction-banner"><span id="result-art" class="result-art" aria-hidden="true">🐾</span><p id="result-animal" class="result-animal" hidden></p><span class="prediction-caption">MODEL PREDICTION</span><h3 id="result-title"></h3><p id="result-message" class="result-message"></p></div>
+              <div class="score-panel" id="score-panel" style="margin-top: 18px;">
+                <div class="score-top"><span>Risk Score</span><strong id="score-value">0%</strong></div>
+                <div class="score-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div class="score-fill" id="score-fill"></div><div class="threshold-marker" title="0.20 Alert Cutoff"></div></div>
+                <div class="score-labels"><span>0% (Low risk)</span><span>Alert Cutoff: 20%</span><span>100% (High risk)</span></div>
+                <p id="score-explainer"></p>
+              </div>
+              <div id="action-panel" style="margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: #fff8f5; border: 1px solid #f6ded5;">
+                <strong style="display:block; font-size: 11px; font-weight: 900; letter-spacing: 0.8px; color: #a45846; margin-bottom: 5px;">STAFF ACTION GUIDANCE</strong>
+                <p id="action-text" style="margin: 0; font-size: 13px; line-height: 1.5; color: #4b6256;"></p>
+              </div>
+              <div class="data-notes-wrap" id="data-notes-wrap" hidden>
+                <h4>Data &amp; Preprocessing Notes</h4>
+                <ul id="data-notes-list"></ul>
+              </div>
+              <p class="result-footnote"><strong>Notice:</strong> This model predicts admission duration (&gt; 30 days) from intake data, regardless of outcome type (adoption, return to owner, or transfer). Staff must make all animal care and welfare decisions.</p>
+            </div>
           </div>
           <div class="aside-note"><span class="aside-icon" aria-hidden="true">♡</span><div><strong>Made for shelter teams</strong><p>Based on Sonoma County, California, USA data. This is a student prototype, not a deployed shelter tool.</p></div></div>
+
+          <details class="more-details" style="margin-top: 14px; background: #fff; border-style: solid; border-color: #eeeae4;">
+            <summary style="padding: 14px 18px; font-size: 13px;">
+              <span><span class="plus" aria-hidden="true">📊</span> Model Architecture &amp; Methodology</span>
+              <span class="chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="details-content" style="padding: 0 18px 16px; font-size: 12px; line-height: 1.6; color: #53655b;">
+              <p style="margin: 8px 0 4px;"><strong>Algorithm:</strong> Tuned Random Forest (200 trees, <code>min_samples_leaf=2</code>, <code>max_features="sqrt"</code>)</p>
+              <p style="margin: 4px 0;"><strong>Training Set:</strong> 6,096 admissions (Sonoma County 2023–2026, 3 temporal folds)</p>
+              <p style="margin: 4px 0;"><strong>Target Variable:</strong> <code>long_stay_30</code> (Stay &gt; 30 days; 27.20% positive class)</p>
+              <p style="margin: 4px 0;"><strong>Decision Cutoff:</strong> Fixed at <strong>0.20</strong> (optimized for maximum validation $F_2$-score to catch ~73% of long stays)</p>
+              <p style="margin: 4px 0;"><strong>Data Leakage Prevention:</strong> Only intake-known attributes used. Post-intake dates, disposition, and duration are strictly excluded.</p>
+            </div>
+          </details>
         </aside>
       </section>
     </main>
