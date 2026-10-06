@@ -66,7 +66,7 @@ copy, or use `.\.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --
 
 - `long_stay_score`: the model's score between 0 and 1; not a confirmed probability.
 - `predicted_stay_group`: the direct 30-day classification shown on the screen.
-- `alert`: true when the unrounded score is at least the saved **0.20** cutoff.
+- `alert`: true when the unrounded score is at least the saved **0.375833** cutoff.
 - `decision`: review suggested, or no alert at this cutoff. No alert is not a guarantee.
 - `age_estimated`: whether a missing birth date used the saved training-data age estimate.
 - `data_notes`: how missing and rare/new input values were handled. These are not
@@ -87,8 +87,8 @@ are rejected. No data is stored by this API.
 ## Files and simple viva explanation
 
 - **schemas.py**: “We check the user input and reject invalid dates or fields.”
-- **predictor.py**: “We load the saved preprocessing and Random Forest once. We use
-  the same 0.20 cutoff from Notebook 7.”
+- **predictor.py**: “We load the saved Step 5 preprocessing and tuned Random Forest once.
+  The review cutoff of 0.375833 was chosen on validation data.”
 - **main.py**: “This receives requests and sends predictions back to the user screen.”
 - **artifacts/**: original model, preprocessing helper and saved policy. Keep together.
 - **tests/**: checks for valid/invalid requests, missing details, rare values,
@@ -101,14 +101,27 @@ are rejected. No data is stored by this API.
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-The saved prediction examples are used to verify software consistency. They do not
-create a new independent model evaluation. The original Notebook 7 policy retains
-its historical pre-test flag; Notebook 8 is the record of completed final testing.
+The active model is the tuned Random Forest selected in
+`Stage_6_7_8_Model_Development.ipynb`, with age-interaction features. It uses 400
+trees, `min_samples_leaf=1`, `max_features=0.5`, no maximum depth, and no class
+weighting. The 0.375833 decision cutoff maximizes positive-class F1 on the
+validation set. It is not the earlier Notebook 7 model or its 0.20 cutoff.
+
+On the held-out test split (1,672 admissions), the model scored **73.3% accuracy**,
+**56.9% balanced accuracy**, **30.6% long-stay recall**, **30.0% positive-class F1**,
+and **0.318 average precision**. The majority-class dummy scored **81.2% accuracy**
+with **0% long-stay recall**. Accuracy alone is misleading for this imbalanced
+test set; the model’s accuracy is lower than the dummy baseline, while it identifies
+some long stays. The test confusion matrix (actual rows 0/1, predicted columns 0/1)
+is `[[1129, 229], [218, 96]]`.
+
+The saved prediction examples check that this bundled model and preprocessor remain
+loadable and consistent. They are not a new independent model evaluation.
 
 ## Limits
 
 This is a local academic prototype based on **Sonoma County, California, USA**.
-The final test had 230 caught long stays, 84 missed long stays and 732 false alerts.
+The final test had 96 caught long stays, 218 missed long stays, and 229 false alerts.
 It has not been validated for Sri Lanka or live shelter decisions. Staff must make
 the care decisions. The backend is not a deployment or evidence of welfare benefit.
 

@@ -95,8 +95,8 @@
               <div id="prediction-banner" class="prediction-banner"><span id="result-art" class="result-art" aria-hidden="true">🐾</span><p id="result-animal" class="result-animal" hidden></p><span class="prediction-caption">MODEL PREDICTION</span><h3 id="result-title"></h3><p id="result-message" class="result-message"></p></div>
               <div class="score-panel" id="score-panel" style="margin-top: 18px;">
                 <div class="score-top"><span>Risk Score</span><strong id="score-value">0%</strong></div>
-                <div class="score-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div class="score-fill" id="score-fill"></div><div class="threshold-marker" title="0.20 Alert Cutoff"></div></div>
-                <div class="score-labels"><span>0% (Low risk)</span><span>Alert Cutoff: 20%</span><span>100% (High risk)</span></div>
+                <div class="score-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div class="score-fill" id="score-fill"></div><div class="threshold-marker" id="threshold-marker" title="Validation-selected alert cutoff"></div></div>
+                <div class="score-labels"><span>0% (Lower score)</span><span id="threshold-label">Review cutoff</span><span>100% (Higher score)</span></div>
                 <p id="score-explainer"></p>
               </div>
               <div id="action-panel" style="margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: #fff8f5; border: 1px solid #f6ded5;">
@@ -118,10 +118,12 @@
               <span class="chevron" aria-hidden="true">⌄</span>
             </summary>
             <div class="details-content" style="padding: 0 18px 16px; font-size: 12px; line-height: 1.6; color: #53655b;">
-              <p style="margin: 8px 0 4px;"><strong>Algorithm:</strong> Tuned Random Forest (200 trees, <code>min_samples_leaf=2</code>, <code>max_features="sqrt"</code>)</p>
-              <p style="margin: 4px 0;"><strong>Training Set:</strong> 6,096 admissions (Sonoma County 2023–2026, 3 temporal folds)</p>
-              <p style="margin: 4px 0;"><strong>Target Variable:</strong> <code>long_stay_30</code> (Stay &gt; 30 days; 27.20% positive class)</p>
-              <p style="margin: 4px 0;"><strong>Decision Cutoff:</strong> Fixed at <strong>0.20</strong> (optimized for maximum validation $F_2$-score to catch ~73% of long stays)</p>
+              <p style="margin: 8px 0 4px;"><strong>Algorithm:</strong> Tuned Random Forest (400 trees, <code>min_samples_leaf=1</code>, <code>max_features=0.5</code>, unlimited depth)</p>
+              <p style="margin: 4px 0;"><strong>Features:</strong> 183 encoded intake features plus 8 age interactions</p>
+              <p style="margin: 4px 0;"><strong>Training / validation / test:</strong> 6,096 / 1,163 / 1,672 admissions; stratified 3-fold cross-validation on training data</p>
+              <p style="margin: 4px 0;"><strong>Target Variable:</strong> <code>long_stay_30</code> (stay &gt; 30 days)</p>
+              <p style="margin: 4px 0;"><strong>Decision Cutoff:</strong> <strong>0.3758</strong>, selected to maximize positive-class F1 on validation data</p>
+              <p style="margin: 4px 0;"><strong>Held-out test results:</strong> 73.3% accuracy, 56.9% balanced accuracy, 30.6% long-stay recall. The majority-class baseline had 81.2% accuracy and 0% long-stay recall.</p>
               <p style="margin: 4px 0;"><strong>Data Leakage Prevention:</strong> Only intake-known attributes used. Post-intake dates, disposition, and duration are strictly excluded.</p>
             </div>
           </details>

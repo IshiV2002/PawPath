@@ -149,15 +149,23 @@ function showPrediction(result) {
     ? 'The model predicts this animal’s shelter stay will be longer than 30 days.'
     : 'The model predicts this animal’s shelter stay will be 30 days or less.';
 
-  // Render Risk Score & F2 Cutoff (0.20 Threshold)
+  // Render the model score and validation-selected review cutoff.
   const scorePercent = (result.long_stay_score * 100).toFixed(1);
+  const thresholdPercent = (result.threshold * 100).toFixed(1);
   const scoreValue = document.querySelector('#score-value');
   const scoreFill = document.querySelector('#score-fill');
   const scoreExplainer = document.querySelector('#score-explainer');
+  const thresholdMarker = document.querySelector('#threshold-marker');
+  const thresholdLabel = document.querySelector('#threshold-label');
   if (scoreValue && scoreFill && scoreExplainer) {
     scoreValue.textContent = `${scorePercent}%`;
     scoreFill.style.width = `${Math.min(100, Math.round(result.long_stay_score * 100))}%`;
-    scoreExplainer.textContent = `Calculated score: ${result.long_stay_score.toFixed(3)}. The fixed 0.20 alert threshold was selected in Notebook 7 to maximize F2 score (catching ~73% of long stays while minimizing missed cases).`;
+    scoreExplainer.textContent = `Calculated score: ${result.long_stay_score.toFixed(3)}. The ${thresholdPercent}% review cutoff was selected on validation data to maximize positive-class F1. This model score is not a calibrated probability.`;
+    if (thresholdMarker) {
+      thresholdMarker.style.left = `${Math.min(100, Math.max(0, result.threshold * 100))}%`;
+      thresholdMarker.title = `Validation-selected review cutoff: ${thresholdPercent}%`;
+    }
+    if (thresholdLabel) thresholdLabel.textContent = `Review cutoff: ${thresholdPercent}%`;
   }
 
   // Render Actionable Staff Guidance
@@ -171,8 +179,8 @@ function showPrediction(result) {
       actionTitle.style.color = longStay ? '#a45846' : '#3d7256';
     }
     actionText.textContent = longStay
-      ? 'Staff Review Suggested: This admission carries a high likelihood of prolonged stay (> 30 days). Consider early foster placement, behavior enrichment, veterinary follow-up, or priority adoption campaigns.'
-      : 'Standard Shelter Flow: Estimated stay is 30 days or less. Proceed with standard shelter housing, routine vaccinations/checkups, and regular adoption readiness.';
+      ? 'Staff Review Suggested: The model score meets the review cutoff for a stay over 30 days. Review the known case details and consider whether additional support or follow-up is appropriate.'
+      : 'No long-stay alert at this cutoff. Continue the shelter’s usual intake and follow-up process; this result does not guarantee a short stay.';
   }
 
   // Render Data & Preprocessing Notes (Explainability)
