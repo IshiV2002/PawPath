@@ -107,6 +107,14 @@
                 <h4>Data &amp; Preprocessing Notes</h4>
                 <ul id="data-notes-list"></ul>
               </div>
+              <div class="result-actions" id="result-actions">
+                <button type="button" id="print-tag-btn" class="action-btn primary-action-btn" title="Open printable shelter kennel intake card">
+                  <span class="btn-icon" aria-hidden="true">🏷️</span> Print Kennel Tag
+                </button>
+                <button type="button" id="copy-summary-btn" class="action-btn secondary-action-btn" title="Copy structured intake record to clipboard">
+                  <span id="copy-icon" class="btn-icon" aria-hidden="true">📋</span> <span id="copy-text">Copy Record</span>
+                </button>
+              </div>
               <p class="result-footnote"><strong>Notice:</strong> This model predicts admission duration (&gt; 30 days) from intake data, regardless of outcome type (adoption, return to owner, or transfer). Staff must make all animal care and welfare decisions.</p>
             </div>
           </div>
@@ -132,5 +140,63 @@
     </main>
     <footer><span>✿ PawPath <span class="footer-sep">·</span> KND_04</span><span>Predicting stays over 30 days from intake details.</span><a href="/docs">API docs ↗</a></footer>
   </div>
+
+  <!-- Printable Kennel Tag Template (Formatted for printing and physical kennel clipboards) -->
+  <aside id="printable-kennel-tag" class="printable-kennel-tag" aria-hidden="true">
+    <div class="tag-card">
+      <header class="tag-header">
+        <div class="tag-header-left">
+          <span class="tag-logo">🐾 PawPath Shelter Intake</span>
+          <span class="tag-subtitle">Sonoma County Animal Care &amp; Control · Admission Evaluation</span>
+        </div>
+        <div class="tag-header-right">
+          <div class="tag-adm-num" id="tag-adm-id">ADM-2026-0001</div>
+          <div class="tag-date" id="tag-print-date">Date: 2026-10-06</div>
+        </div>
+      </header>
+
+      <div class="tag-alert-banner" id="tag-alert-banner">
+        <div class="tag-alert-icon" id="tag-alert-icon">⚠️</div>
+        <div class="tag-alert-text">
+          <div class="tag-alert-title" id="tag-alert-title">LONG STAY ALERT: &gt; 30 DAYS</div>
+          <div class="tag-alert-sub" id="tag-alert-sub">Score: 48.2% | Cutoff: 37.6% | Proactive Care Plan Recommended</div>
+        </div>
+      </div>
+
+      <div class="tag-section-title">ANIMAL PROFILE</div>
+      <div class="tag-grid">
+        <div class="tag-cell"><strong>Animal Type:</strong> <span id="tag-type">Dog</span></div>
+        <div class="tag-cell"><strong>Breed:</strong> <span id="tag-breed">Labrador Retriever</span></div>
+        <div class="tag-cell"><strong>Color:</strong> <span id="tag-color">Black</span></div>
+        <div class="tag-cell"><strong>Sex:</strong> <span id="tag-sex">Male (Neutered)</span></div>
+        <div class="tag-cell"><strong>Est. Age / DOB:</strong> <span id="tag-age">3.0 yrs (DOB: 2023-01-01)</span></div>
+        <div class="tag-cell"><strong>Intake Date:</strong> <span id="tag-intake-date">2026-01-10</span></div>
+        <div class="tag-cell"><strong>Intake Origin:</strong> <span id="tag-origin">Stray (Field)</span></div>
+        <div class="tag-cell"><strong>Condition:</strong> <span id="tag-condition">Healthy</span></div>
+        <div class="tag-cell tag-span-2"><strong>Jurisdiction:</strong> <span id="tag-jurisdiction">Santa Rosa</span></div>
+      </div>
+
+      <div class="tag-section-title">CARE &amp; INTERVENTION CHECKLIST (STAFF USE)</div>
+      <div class="tag-checklist">
+        <div class="tag-check-item"><span>[ ]</span> <strong>Initial Medical &amp; Vaccine Triage</strong> — Vet health check completed</div>
+        <div class="tag-check-item"><span>[ ]</span> <strong>Behavior &amp; Temperament Assessment</strong> — Logged in shelter database</div>
+        <div class="tag-check-item"><span>[ ]</span> <strong>Enrichment &amp; Exercise Routine</strong> — Kennel enrichment scheduled</div>
+        <div class="tag-check-item" id="tag-foster-check"><span>[ ]</span> <strong>Foster &amp; Rescue Outreach</strong> — Flagged for proactive placement</div>
+        <div class="tag-check-item"><span>[ ]</span> <strong>Adoption Profile &amp; High-Quality Photos</strong> — Priority marketing</div>
+      </div>
+
+      <div class="tag-section-title">KENNEL &amp; STAFF LOG</div>
+      <div class="tag-log-lines">
+        <div class="tag-log-line"><strong>Kennel / Run #:</strong> ____________________ &nbsp;&nbsp;&nbsp;&nbsp; <strong>Attendant Initials:</strong> _________</div>
+        <div class="tag-log-line"><strong>Special Notes:</strong> ____________________________________________________________________</div>
+        <div class="tag-log-line">___________________________________________________________________________________</div>
+      </div>
+
+      <footer class="tag-footer">
+        <span>PawPath Academic Decision Support System (KND_04 · FDM Mini Project)</span>
+        <span>Advisory prototype only. Staff retain full authority for care decisions.</span>
+      </footer>
+    </div>
+  </aside>
 </body>
 </html>

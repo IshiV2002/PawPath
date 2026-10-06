@@ -200,8 +200,144 @@ function showPrediction(result) {
     }
   }
 
+  // Track latest prediction and populate printable kennel tag
+  lastPrediction = result;
+  populateKennelTag(result);
+
   showState('prediction-state');
   document.querySelector('#result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+let lastPrediction = null;
+
+function populateKennelTag(result) {
+  const isOther = form.elements.type.value === 'OTHER';
+  const animalName = isOther ? (otherAnimalInput.value.trim() || 'Other') : (form.elements.type.value === 'DOG' ? 'Dog' : 'Cat');
+  const longStay = result.predicted_stay_group === 'MORE_THAN_30_DAYS';
+  const scorePercent = (result.long_stay_score * 100).toFixed(1);
+  const cutoffPercent = (result.threshold * 100).toFixed(1);
+
+  // Deterministic intake identifier based on date and inputs
+  const hashSeed = `${intakeDate.value}-${animalName}-${form.elements.breed.value || ''}`;
+  let hashNum = 0;
+  for (let i = 0; i < hashSeed.length; i++) hashNum = (hashNum * 31 + hashSeed.charCodeAt(i)) % 10000;
+  const admId = `ADM-${(intakeDate.value || today).replaceAll('-', '')}-${String(Math.abs(hashNum)).padStart(4, '0')}`;
+
+  const setEl = (id, text) => {
+    const el = document.querySelector(id);
+    if (el) el.textContent = text;
+  };
+
+  setEl('#tag-adm-id', admId);
+  setEl('#tag-print-date', `Printed: ${today}`);
+  setEl('#tag-type', animalName);
+  setEl('#tag-breed', form.elements.breed.value.trim() || 'Unknown / Mixed');
+  setEl('#tag-color', form.elements.color.value.trim() || 'Unknown');
+  setEl('#tag-sex', form.elements.sex.options[form.elements.sex.selectedIndex]?.text || form.elements.sex.value);
+  setEl('#tag-intake-date', intakeDate.value || today);
+  setEl('#tag-origin', `${form.elements.intake_type.value || 'Unknown'}${form.elements.intake_subtype.value ? ' (' + form.elements.intake_subtype.value + ')' : ''}`);
+  setEl('#tag-condition', form.elements.intake_condition.value.trim() || 'Unknown');
+  setEl('#tag-jurisdiction', form.elements.intake_jurisdiction.value.trim() || 'Not specified');
+
+  let ageStr = 'Unknown (Estimated from training medians)';
+  if (birthDate.value && intakeDate.value) {
+    const diffDays = (new Date(intakeDate.value) - new Date(birthDate.value)) / (1000 * 60 * 60 * 24);
+    if (diffDays >= 0) {
+      ageStr = `${(diffDays / 365.25).toFixed(1)} yrs (DOB: ${birthDate.value})`;
+    }
+  }
+  setEl('#tag-age', ageStr);
+
+  const banner = document.querySelector('#tag-alert-banner');
+  const icon = document.querySelector('#tag-alert-icon');
+  const title = document.querySelector('#tag-alert-title');
+  const sub = document.querySelector('#tag-alert-sub');
+  const fosterItem = document.querySelector('#tag-foster-check');
+
+  if (banner && icon && title && sub) {
+    if (longStay) {
+      banner.className = 'tag-alert-banner alert-high';
+      icon.textContent = '⚠️';
+      title.textContent = 'LONG STAY ALERT: STAY > 30 DAYS';
+      sub.textContent = `Risk Score: ${scorePercent}% | Cutoff: ${cutoffPercent}% | Proactive Care & Foster Review Suggested`;
+      if (fosterItem) fosterItem.style.fontWeight = 'bold';
+    } else {
+      banner.className = 'tag-alert-banner alert-low';
+      icon.textContent = '✓';
+      title.textContent = 'STANDARD ADMISSION: ≤ 30 DAYS';
+      sub.textContent = `Risk Score: ${scorePercent}% | Cutoff: ${cutoffPercent}% | Standard Shelter Intake Routine`;
+      if (fosterItem) fosterItem.style.fontWeight = 'normal';
+    }
+  }
+}
+
+// Print Kennel Tag Button
+const printTagBtn = document.querySelector('#print-tag-btn');
+if (printTagBtn) {
+  printTagBtn.addEventListener('click', () => {
+    if (!lastPrediction) return;
+    populateKennelTag(lastPrediction);
+    window.print();
+  });
+}
+
+// Copy Structured Intake Record Button
+const copySummaryBtn = document.querySelector('#copy-summary-btn');
+const copyText = document.querySelector('#copy-text');
+if (copySummaryBtn && copyText) {
+  copySummaryBtn.addEventListener('click', async () => {
+    if (!lastPrediction) return;
+    const isOther = form.elements.type.value === 'OTHER';
+    const animalName = isOther ? (otherAnimalInput.value.trim() || 'Other') : form.elements.type.value;
+    const breedStr = form.elements.breed.value.trim() || 'Unknown / Mixed';
+    const colorStr = form.elements.color.value.trim() || 'Unknown';
+    const sexStr = form.elements.sex.options[form.elements.sex.selectedIndex]?.text || form.elements.sex.value;
+    const conditionStr = form.elements.intake_condition.value.trim() || 'Unknown';
+    const originStr = `${form.elements.intake_type.value || 'Unknown'}${form.elements.intake_subtype.value ? ' (' + form.elements.intake_subtype.value + ')' : ''}`;
+    const jurisdictionStr = form.elements.intake_jurisdiction.value.trim() || 'Not specified';
+    const scorePct = (lastPrediction.long_stay_score * 100).toFixed(1);
+    const cutoffPct = (lastPrediction.threshold * 100).toFixed(1);
+
+    const record = [
+      '====================================================',
+      'PAWPATH ANIMAL SHELTER INTAKE & STAY ASSESSMENT',
+      '====================================================',
+      `Animal Type:       ${animalName}`,
+      `Breed / Color:     ${breedStr} / ${colorStr}`,
+      `Sex / Sterilized:  ${sexStr}`,
+      `Intake Date:       ${intakeDate.value}`,
+      `Arrival Origin:    ${originStr}`,
+      `Condition:         ${conditionStr}`,
+      `Jurisdiction:      ${jurisdictionStr}`,
+      `Age Status:        ${lastPrediction.age_estimated ? 'Estimated from training medians' : birthDate.value}`,
+      '----------------------------------------------------',
+      '30-DAY STAY PREDICTION RESULT',
+      '----------------------------------------------------',
+      `Stay Group:        ${lastPrediction.predicted_stay_group === 'MORE_THAN_30_DAYS' ? 'MORE THAN 30 DAYS (ALERT)' : '30 DAYS OR LESS (STANDARD)'}`,
+      `Model Risk Score:  ${scorePct}% (Validation Review Cutoff: ${cutoffPct}%)`,
+      `Staff Decision:    ${lastPrediction.decision}`,
+      `Advisory Notice:   ${lastPrediction.score_note}`,
+      '===================================================='
+    ].join('\n');
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(record);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = record;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      copyText.textContent = 'Copied to Clipboard! ✓';
+      setTimeout(() => { copyText.textContent = 'Copy Record'; }, 2500);
+    } catch {
+      copyText.textContent = 'Copy Failed';
+      setTimeout(() => { copyText.textContent = 'Copy Record'; }, 2000);
+    }
+  });
 }
 
 form.addEventListener('submit', async event => {

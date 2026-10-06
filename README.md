@@ -36,6 +36,8 @@ The model libraries are pinned to the versions used when this model was saved.
    Use **Try an example** to fill in sample details quickly.
 4. Click **Predict stay**. The screen gives one clear answer: **More than 30 days**
    or **30 days or less**. It is a prediction, not a guaranteed stay length.
+5. Use **Print Kennel Tag** to generate a print-formatted shelter intake tag with a
+   staff care checklist, or **Copy Record** to copy structured intake notes to your clipboard.
 
 The screen is served by the same local FastAPI app, so it needs no separate
 frontend installation or internet connection. It does not save entered details.
