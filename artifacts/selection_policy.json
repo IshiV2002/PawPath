@@ -1,25 +1,38 @@
 {
   "candidate": {
-    "candidate_id": "random_forest_2_ordinary",
+    "candidate_id": "random_forest_tuned_age_interactions",
     "family": "random_forest",
     "balanced": false,
+    "feature_variant": "age interactions",
     "params": {
-      "n_estimators": 200,
+      "n_estimators": 400,
       "max_depth": null,
-      "min_samples_leaf": 2,
-      "max_features": "sqrt",
-      "n_jobs": 1,
+      "min_samples_leaf": 1,
+      "max_features": 0.5,
+      "class_weight": null,
+      "n_jobs": -1,
       "random_state": 42
     }
   },
-  "alert_threshold": 0.2,
+  "alert_threshold": 0.3758333333333333,
   "positive_class": 1,
   "target": "long_stay_30",
   "target_definition": "stay longer than 30 days",
-  "model_selection": "mean AP across three training-only temporal folds",
-  "threshold_selection": "maximum validation F2; ties: precision then higher cutoff",
+  "model_selection": "Highest validation average precision among baseline, tuned, and feature variants; selected Random forest tuned | age interactions.",
+  "threshold_selection": "Maximum positive-class F1 on validation data.",
+  "cross_validation": {
+    "mode": "stratified",
+    "folds": 3,
+    "search_iterations": 10,
+    "scoring": "average_precision",
+    "random_state": 42
+  },
   "fit_rows": 6096,
   "validation_rows": 1163,
+  "test_rows": 1672,
+  "encoded_feature_count": 193,
+  "constant_features_removed": 10,
+  "model_feature_count": 191,
   "raw_input_fields": [
     "type",
     "breed",
@@ -34,16 +47,36 @@
   ],
   "probabilities_calibrated": false,
   "calibration_assessed": true,
-  "test_evaluated": false,
-  "model_sha256": "0b16728328a1624c20d53a81811ff06b2bd5ac554c9ff25a56ecad2efc73837f",
+  "test_evaluated": true,
+  "test_metrics": {
+    "accuracy": 0.7326555023923444,
+    "balanced_accuracy": 0.5685510726715008,
+    "precision": 0.2953846153846154,
+    "recall": 0.3057324840764331,
+    "f1": 0.3004694835680751,
+    "roc_auc": 0.6360503456750748,
+    "average_precision": 0.31753588255606524,
+    "confusion_matrix": [
+      [
+        1129,
+        229
+      ],
+      [
+        218,
+        96
+      ]
+    ],
+    "dummy_majority_accuracy": 0.812200956937799
+  },
+  "model_sha256": "3fd6b49faf97cca0431a46de7d4be74593d643a33fc4f425961370bf554568a9",
   "helper_sha256": "06cc7842b907623335978b986d8a6c8bafe905ebe15ab07dab1fd5d192f59dd8",
   "versions": {
     "pandas": "3.0.1",
     "numpy": "2.5.3",
     "scikit-learn": "1.9.1",
     "scipy": "1.18.1",
-    "joblib": "1.6.0",
-    "matplotlib": "3.11.2"
+    "joblib": "1.6.0"
   },
-  "created_utc": "2026-09-28T09:15:34.070857+00:00"
+  "created_from": "Stage_6_7_8_Model_Development.ipynb and FDM mini project.zip Step 5 artifacts",
+  "created_utc": "2026-10-06"
 }

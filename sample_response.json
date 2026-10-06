@@ -1,10 +1,10 @@
 {
-  "long_stay_score": 0.10569201413648383,
+  "long_stay_score": 0.055,
   "alert": false,
   "predicted_stay_group": "30_DAYS_OR_LESS",
   "decision": "No alert at the current cutoff",
-  "threshold": 0.2,
-  "model_name": "random_forest_2_ordinary",
+  "threshold": 0.3758333333333333,
+  "model_name": "random_forest_tuned_age_interactions",
   "target": "Stay longer than 30 days",
   "age_estimated": false,
   "data_notes": [

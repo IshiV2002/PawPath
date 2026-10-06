@@ -17,7 +17,7 @@ async def lifespan(app):
 
 app = FastAPI(
     title="KND_04 Shelter Stay API", version="1.0.0",
-    description="Local academic demonstration. Predicts a long-stay score using the frozen Notebook 7 model. "
+    description="Local academic demonstration. Predicts a long-stay score using the selected Stages 6-8 Random Forest. "
                 "Inputs are not stored. The alert cutoff is fixed; this API does not train the model.",
     lifespan=lifespan)
 
@@ -38,9 +38,11 @@ def health(request: Request):
 @app.get("/model-info")
 def model_info(request: Request):
     predictor = request.app.state.predictor
-    return {"model": predictor.policy["candidate"]["candidate_id"],
+    return {"model": predictor.candidate_id,
             "threshold": predictor.threshold, "training_rows": predictor.policy["fit_rows"],
             "input_fields": predictor.policy["raw_input_fields"],
+            "feature_variant": predictor.policy["candidate"]["feature_variant"],
+            "test_metrics": predictor.policy["test_metrics"],
             "probabilities_calibrated": False,
             "scope": "Sonoma County, California, USA; academic prototype"}
 

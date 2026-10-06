@@ -64,14 +64,15 @@ class BackendTests(unittest.TestCase):
 
     def test_routes_and_schema(self):
         self.assertEqual(self.client.get('/health').json(),{'status':'ready','model_loaded':True})
-        self.assertEqual(self.client.get('/model-info').json()['threshold'],0.2)
+        self.assertEqual(self.client.get('/model-info').json()['threshold'],0.3758333333333333)
         self.assertEqual(self.client.get('/').status_code,200)
         schema=self.client.get('/openapi.json').json()
         self.assertEqual(set(schema['components']['schemas']['AnimalInput']['required']),{'type','intake_date'})
 
     def test_cutoff_boundary(self):
-        self.assertTrue(needs_review(0.20,0.20))
-        self.assertFalse(needs_review(0.199999,0.20))
+        threshold = app.state.predictor.threshold
+        self.assertTrue(needs_review(threshold, threshold))
+        self.assertFalse(needs_review(threshold - 0.000001, threshold))
 
     def test_changed_model_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
