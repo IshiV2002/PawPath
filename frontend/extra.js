@@ -35,6 +35,9 @@ async function api(path, options = {}) {
   if (response.status === 204) return null;
   const body = await response.json();
   if (!response.ok) {
+    if (response.status === 404 && path === '/cases') {
+      throw new Error('The running backend is older than this page. Stop it, restart start_backend.py from the PawPath folder, then refresh.');
+    }
     const detail = typeof body.detail === 'string' ? body.detail : 'Please check the entered details.';
     throw new Error(detail);
   }
@@ -150,8 +153,8 @@ async function loadCases() {
     } else {
       saved.forEach(item => caseList.append(renderCase(item)));
     }
-  } catch {
-    message('Follow-ups are unavailable. Restart the PawPath backend and refresh this page.', true);
+  } catch (error) {
+    message(error.message, true);
   }
 }
 
