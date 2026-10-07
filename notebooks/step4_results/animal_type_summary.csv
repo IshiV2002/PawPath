@@ -1,0 +1,4 @@
+type,records,long_stays,long_stay_percent
+DOG,3491,948,27.16
+CAT,2000,813,40.65
+OTHER,605,151,24.96

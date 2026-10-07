@@ -1,0 +1,20 @@
+{
+  "source_url": "https://data.sonomacounty.ca.gov/Government/Animal-Shelter-Intake-and-Outcome/924a-vesw",
+  "source_file": "Sonoma_Animal_Shelter_2023-2026_RAW_9940.csv",
+  "source_sha256": "fd465b0dc5178bd13d0b9e70959320137f9526e635fe982c5ffc2c115faf61e0",
+  "observation_date": "2026-09-14",
+  "latest_included_intake": "2026-08-14",
+  "target": "long_stay_30: 1 if stay exceeds 30 days, otherwise 0",
+  "raw_rows": 9940,
+  "retained_rows": 9670,
+  "excluded_rows": 270,
+  "short_stays": 7040,
+  "long_stays": 2630,
+  "assumed_ongoing_labels": 100,
+  "limitations": [
+    "Both outcome fields blank is treated as ongoing; delayed updates could affect labels.",
+    "Same-animal, same-date groups are set aside for review, not proven errors.",
+    "Duration covers any outcome, not adoption alone or exact kennel occupancy.",
+    "Predictor cleaning, time/group splitting and training-only transformations remain unfinished."
+  ]
+}

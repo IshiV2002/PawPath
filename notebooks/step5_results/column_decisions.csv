@@ -1,0 +1,25 @@
+source_field,action,reason
+type,Use,Animal type; also selects a training-only replacement age.
+breed,Use and group rare labels,Breed as recorded; retain uncertainty about historical updates.
+color,Use and group rare labels,Coat colour as recorded; no causal claim.
+sex,Derive biological sex,"Discard neuter/spay status, which could change after arrival."
+size,Exclude for first pipeline,Mixed physical-size/life-stage labels; arrival-time value not verified.
+date_of_birth,Derive age and missing flag,Approximate age at arrival; invalid or absent values are unavailable.
+intake_date,Derive month sine/cosine,Calendar timing known at arrival; original date used for audit/splitting.
+intake_type,Use,Recorded reason for arrival.
+intake_subtype,Use and group rare labels,More detailed arrival reason.
+intake_condition,Use with UNKNOWN category,Source explicitly describes condition at intake; often unknown.
+intake_jurisdiction,Use,Area responsible for intake; different from destination.
+name,Exclude,"Name/identifier, sometimes assigned by shelter staff."
+id,Audit only,Animal identity used for group-overlap checks.
+impound_number,Audit only,"Admission identifier, not an animal characteristic."
+kennel_number,Exclude,"Source describes current location, not guaranteed location at arrival."
+outcome_date,Target/audit only,Known after arrival; would reveal later information.
+days_in_shelter,Exclude from inputs,Final duration gives away the target.
+outcome_type,Target/audit only,Reason for release is later information.
+outcome_subtype,Exclude,Detailed later outcome information.
+outcome_condition,Exclude,"Condition at release, not arrival."
+outcome_jurisdiction,Exclude,Destination information.
+zip_code,Exclude,Source defines destination ZIP code.
+location,Exclude,Source defines outcome-jurisdiction coordinates.
+intake_total,Exclude,"Source aggregation field, not an arrival characteristic."

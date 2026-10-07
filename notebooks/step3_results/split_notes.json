@@ -1,0 +1,38 @@
+{
+  "source_url": "https://data.sonomacounty.ca.gov/Government/Animal-Shelter-Intake-and-Outcome/924a-vesw",
+  "step2_csv_sha256": "95e1a4e4e5a8c59a08cf24f02cee360815a5f8f0135128bc79fbcc65c0379e89",
+  "original_csv_sha256": "fd465b0dc5178bd13d0b9e70959320137f9526e635fe982c5ffc2c115faf61e0",
+  "observation_date": "2026-09-14",
+  "validation_start": "2025-07-01",
+  "test_start": "2026-01-01",
+  "gap_days": 31,
+  "training_end_exclusive": "2025-05-31",
+  "validation_end_exclusive": "2025-12-01",
+  "rows_from_step2": 9670,
+  "training_rows": 6096,
+  "validation_rows": 1163,
+  "test_rows": 1672,
+  "excluded_at_step3": 739,
+  "exclusion_reasons": {
+    "31-day gap before validation or testing": 519,
+    "Training animal also appears in validation or test period": 182,
+    "Validation animal also appears in test period": 38
+  },
+  "animal_overlap_between_splits": 0,
+  "evaluation_unit": "Admission event; the animal is absent from earlier retained splits.",
+  "label_known_rule": "Short stay: outcome date. Long stay: intake plus 31 days.",
+  "pandas_version_used": "3.0.1",
+  "limitations": [
+    "A single retrospective snapshot cannot prove historical data-entry or update times.",
+    "Blank outcomes are assumed ongoing, as documented in Step 2.",
+    "Removing earlier visits of later animals changes the evaluated population.",
+    "Different visits of one animal may remain within one split.",
+    "Feature availability, missing-value handling, encoding and scaling remain unfinished.",
+    "Model tuning must use time/group-aware validation; do not replace this with random row-level cross-validation."
+  ],
+  "output_sha256": {
+    "train_records.csv": "c6ac7ac4807b48029070cbdb2ee4ff69c69c8a4decb6e5b9c051b5a6faf41cc0",
+    "validation_records.csv": "e3a0d070dd15d10597bdef1c37d1fe5fffa957638012c6d363bb1e07e8acb7cc",
+    "test_records.csv": "ec92210127008b3031e6056e99d6b7653c957273b8f6a5858f3304e636a2abfb"
+  }
+}

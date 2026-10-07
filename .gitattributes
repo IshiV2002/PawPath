@@ -1,3 +1,8 @@
 * text=auto
 *.joblib binary
 *.png binary
+notebooks/*.csv -text
+notebooks/step2_results/*.csv -text
+notebooks/step3_results/*.csv -text
+notebooks/step4_results/*.csv -text
+notebooks/step5_results/*.csv -text
