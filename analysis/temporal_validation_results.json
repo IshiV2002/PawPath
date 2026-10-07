@@ -1,0 +1,19 @@
+{
+  "purpose": "Training-only temporal and animal-disjoint robustness audit",
+  "uses_validation_split": false,
+  "uses_test_split": false,
+  "preprocessing_fitted_separately_per_fold": true,
+  "selected_deployed_model_changed": false,
+  "mean_average_precision": {
+    "Logistic regression": 0.62781,
+    "Linear SVM": 0.62537,
+    "Random forest": 0.66409,
+    "Gradient boosting": 0.66525,
+    "Selected tuned forest + age interactions": 0.63469
+  },
+  "limitations": [
+    "The windows have different sizes and long-stay rates; means are descriptive.",
+    "These folds check generalization within the old training period, not current shelter deployment.",
+    "A single retrospective snapshot cannot prove when mutable intake fields were last changed."
+  ]
+}

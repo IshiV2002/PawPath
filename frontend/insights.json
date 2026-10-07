@@ -1,0 +1,93 @@
+{
+  "method": "Exploratory intake-only association rules screened using training and later validation records",
+  "target": "More than 30 days; descriptive association, not a cause or an individual prediction",
+  "training_rows": 6096,
+  "validation_rows": 1163,
+  "training_long_stay_rate": 0.3136,
+  "validation_long_stay_rate": 0.2107,
+  "minimum_training_matches": 80,
+  "minimum_validation_matches": 25,
+  "minimum_validation_lift": 1.2,
+  "rules": [
+    {
+      "conditions": {
+        "age_group": "Under 1 year",
+        "intake_condition": "HEALTHY"
+      },
+      "training": {
+        "matching": 812,
+        "long_stays": 564,
+        "rate": 0.6946,
+        "support": 0.1332,
+        "lift": 2.215
+      },
+      "validation": {
+        "matching": 126,
+        "long_stays": 48,
+        "rate": 0.381,
+        "support": 0.1083,
+        "lift": 1.808
+      }
+    },
+    {
+      "conditions": {
+        "type": "DOG",
+        "intake_type": "OWNER SURRENDER"
+      },
+      "training": {
+        "matching": 246,
+        "long_stays": 96,
+        "rate": 0.3902,
+        "support": 0.0404,
+        "lift": 1.244
+      },
+      "validation": {
+        "matching": 81,
+        "long_stays": 29,
+        "rate": 0.358,
+        "support": 0.0696,
+        "lift": 1.7
+      }
+    },
+    {
+      "conditions": {
+        "age_group": "Under 1 year",
+        "intake_type": "OWNER SURRENDER"
+      },
+      "training": {
+        "matching": 266,
+        "long_stays": 141,
+        "rate": 0.5301,
+        "support": 0.0436,
+        "lift": 1.69
+      },
+      "validation": {
+        "matching": 51,
+        "long_stays": 18,
+        "rate": 0.3529,
+        "support": 0.0439,
+        "lift": 1.675
+      }
+    },
+    {
+      "conditions": {
+        "type": "CAT",
+        "age_group": "Under 1 year"
+      },
+      "training": {
+        "matching": 1113,
+        "long_stays": 564,
+        "rate": 0.5067,
+        "support": 0.1826,
+        "lift": 1.616
+      },
+      "validation": {
+        "matching": 268,
+        "long_stays": 72,
+        "rate": 0.2687,
+        "support": 0.2304,
+        "lift": 1.275
+      }
+    }
+  ]
+}

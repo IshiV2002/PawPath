@@ -19,3 +19,4 @@ Thumbs.db
 # Temporary screenshots and local output
 frontend-check.png
 verification_results.json
+data/
