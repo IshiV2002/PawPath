@@ -1,0 +1,12 @@
+field,loaded_type,different_nonblank_values
+type,str,3
+breed,str,462
+color,str,211
+sex,str,5
+size,str,7
+date_of_birth,str,2094
+intake_date,str,829
+intake_type,str,6
+intake_subtype,str,22
+intake_condition,str,5
+intake_jurisdiction,str,12

@@ -1,0 +1,77 @@
+{
+  "source_url": "https://data.sonomacounty.ca.gov/Government/Animal-Shelter-Intake-and-Outcome/924a-vesw",
+  "source_sha256_by_split": {
+    "train": "c6ac7ac4807b48029070cbdb2ee4ff69c69c8a4decb6e5b9c051b5a6faf41cc0",
+    "validation": "e3a0d070dd15d10597bdef1c37d1fe5fffa957638012c6d363bb1e07e8acb7cc",
+    "test": "ec92210127008b3031e6056e99d6b7653c957273b8f6a5858f3304e636a2abfb"
+  },
+  "raw_input_fields": [
+    "type",
+    "breed",
+    "color",
+    "sex",
+    "date_of_birth",
+    "intake_date",
+    "intake_type",
+    "intake_subtype",
+    "intake_condition",
+    "intake_jurisdiction"
+  ],
+  "readable_features": [
+    "type",
+    "breed",
+    "color",
+    "biological_sex",
+    "intake_type",
+    "intake_subtype",
+    "intake_condition",
+    "intake_jurisdiction",
+    "age_years",
+    "age_missing",
+    "intake_month_sin",
+    "intake_month_cos"
+  ],
+  "encoded_feature_count": 193,
+  "rows": {
+    "train": 6096,
+    "validation": 1163,
+    "test": 1672
+  },
+  "rows_removed_in_step5": 0,
+  "training_rows_with_estimated_age": 1394,
+  "age_medians_by_type": {
+    "CAT": 0.2518822724161533,
+    "DOG": 2.001368925393566,
+    "OTHER": 1.8986995208761122
+  },
+  "overall_age_median": 1.4948665297741273,
+  "rare_min_count": 10,
+  "rare_grouping_fields": [
+    "breed",
+    "color",
+    "intake_subtype"
+  ],
+  "fit_data": "Training inputs only; no target used to learn preprocessing.",
+  "fitted_state_hash": "b19db60b4454ac016bd5c61456566567",
+  "libraries": {
+    "pandas": "3.0.1",
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "joblib": "1.6.0"
+  },
+  "python_version": "3.12.14",
+  "status": "Preprocessing implemented and checked; no prediction model trained or evaluated.",
+  "limitations": [
+    "Arrival-time availability of mutable attributes cannot be proven from this snapshot.",
+    "Size omitted; biological sex excludes neuter/spay status but record timing remains uncertain.",
+    "Birth dates are approximate; imputed ages are estimates, including mixed-species OTHER.",
+    "Rare grouping threshold 10 is an initial choice; revisit only through training/validation.",
+    "Ongoing-label and retrospective evaluation assumptions from earlier notebooks still apply.",
+    "A reserved new-category slot has no directly learned evidence if absent from training."
+  ],
+  "documentation": [
+    "https://scikit-learn.org/stable/common_pitfalls.html",
+    "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html"
+  ]
+}

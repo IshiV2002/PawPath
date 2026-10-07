@@ -1,0 +1,57 @@
+{
+  "source_url": "https://data.sonomacounty.ca.gov/Government/Animal-Shelter-Intake-and-Outcome/924a-vesw",
+  "training_csv_sha256": "c6ac7ac4807b48029070cbdb2ee4ff69c69c8a4decb6e5b9c051b5a6faf41cc0",
+  "training_rows": 6096,
+  "short_stays": 4184,
+  "long_stays": 1912,
+  "long_stay_percent": 31.36,
+  "blank_birth_dates": 1383,
+  "unreadable_birth_dates": 0,
+  "birth_dates_after_intake": 11,
+  "valid_nonnegative_ages": 4702,
+  "exact_duplicate_rows": 0,
+  "extra_visits_beyond_first_per_animal": 463,
+  "same_animal_same_date_rows": 0,
+  "candidate_fields": [
+    "type",
+    "breed",
+    "color",
+    "sex",
+    "size",
+    "date_of_birth",
+    "intake_date",
+    "intake_type",
+    "intake_subtype",
+    "intake_condition",
+    "intake_jurisdiction"
+  ],
+  "different_breed_labels": 462,
+  "rows_changed_or_removed": 0,
+  "charts": [
+    "01_missing_information.png",
+    "02_target_balance.png",
+    "03_animal_types.png",
+    "04_age_distribution.png",
+    "05_monthly_arrivals.png",
+    "06_common_breeds.png"
+  ],
+  "status": "Training-data EDA complete for these checks; preprocessing and modelling remain unfinished.",
+  "next_decisions": [
+    "Treat invalid ages as unavailable and fit replacement values on training data only.",
+    "Review rare categories and choose train-fitted encoding.",
+    "Review arrival-time availability of animal attributes before selecting final inputs.",
+    "Handle imbalance during training and evaluate with more than accuracy.",
+    "Keep legitimate repeated admissions and apply group/time-aware checks during tuning."
+  ],
+  "limitations": [
+    "Patterns describe the selected training admissions and do not establish causes.",
+    "Birth dates may be approximate and recorded attributes may have been updated later.",
+    "Ongoing-stay label assumptions and retrospective snapshot limitations still apply.",
+    "Monthly counts reflect exclusions and a partial final month.",
+    "No validation or test outcome exploration was performed."
+  ],
+  "libraries": {
+    "pandas": "3.0.1",
+    "matplotlib": "3.11.2"
+  }
+}

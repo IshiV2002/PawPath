@@ -1,0 +1,58 @@
+field,category,records
+sex,Neutered,1502
+sex,Male,1486
+sex,Spayed,1300
+sex,Female,1255
+sex,Unknown,553
+size,SMALL,2300
+size,MED,1410
+size,KITTN,947
+size,LARGE,729
+size,PUPPY,490
+size,TOY,179
+size,X-LRG,41
+intake_type,STRAY,4343
+intake_type,CONFISCATE,849
+intake_type,OWNER SURRENDER,447
+intake_type,QUARANTINE,251
+intake_type,BORN HERE,105
+intake_type,ADOPTION RETURN,101
+intake_subtype,OVER THE COUNTER,2366
+intake_subtype,FIELD,1518
+intake_subtype,FLD_STRAY,1140
+intake_subtype,FLD_ARREST,263
+intake_subtype,FLD_HOSPTL,141
+intake_subtype,EMAIL,112
+intake_subtype,MOM STRAY,102
+intake_subtype,FLD_CRUEL,97
+intake_subtype,FLD_INVEST,94
+intake_subtype,FLD_ABAND,85
+intake_subtype,FLD_CORONR,50
+intake_subtype,FLD_EVICT,46
+intake_subtype,PHONE,37
+intake_subtype,VET_HOSP,22
+intake_subtype,FLD_EMERGE,10
+intake_subtype,MOM OS,3
+intake_subtype,OVER THE COUNTER_OWNED,3
+intake_subtype,BORN_HERE,2
+intake_subtype,OVER THE COUNTER_EMERGE,2
+intake_subtype,COMM CAT,1
+intake_subtype,RESCUE_GRP,1
+intake_subtype,PRIV_SHELT,1
+intake_condition,UNKNOWN,4468
+intake_condition,HEALTHY,1411
+intake_condition,TREATABLE/REHAB,119
+intake_condition,TREATABLE/MANAGEABLE,61
+intake_condition,UNTREATABLE,37
+intake_jurisdiction,SANTA ROSA,3516
+intake_jurisdiction,COUNTY,2401
+intake_jurisdiction,WINDSOR,54
+intake_jurisdiction,HEALDSBURG,36
+intake_jurisdiction,OUT OF COUNTY,19
+intake_jurisdiction,*SONOMA,18
+intake_jurisdiction,PETALUMA,18
+intake_jurisdiction,*ROHNERT PARK,15
+intake_jurisdiction,*SEBASTOPOL,13
+intake_jurisdiction,*COTATI,3
+intake_jurisdiction,UNKNOWN,2
+intake_jurisdiction,CLOVERDALE,1
