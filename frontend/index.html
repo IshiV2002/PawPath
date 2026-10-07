@@ -13,7 +13,7 @@
   <div class="page-shell">
     <header class="topbar">
       <a class="brand" href="/" aria-label="PawPath home"><span class="brand-mark" aria-hidden="true">✿</span><span>Paw<span class="brand-accent">Path</span></span></a>
-      <div class="topbar-right"><span class="project-tag">KND_04 · FDM PROJECT</span><a href="/docs" class="docs-link">API docs <span aria-hidden="true">↗</span></a></div>
+      <div class="topbar-right"><span class="project-tag">A shelter stay planning tool</span></div>
     </header>
 
     <main>
@@ -42,7 +42,7 @@
             <div id="other-animal-field" class="other-animal-field" hidden>
               <label class="field" for="other_animal">What animal is it? <span class="required">*</span></label>
               <input id="other_animal" name="other_animal" type="text" maxlength="60" placeholder="e.g. Rabbit, bird, guinea pig" autocomplete="off">
-              <p class="field-hint">The name appears in the result. The model groups these animals as “Other.”</p>
+              <p class="field-hint">This name appears in the result and on the printable tag. The prediction uses the broad “Other” group.</p>
             </div>
 
             <div class="form-section"><div class="form-section-title"><span class="mini-number">01</span><div><h3>Arrival details</h3><p>The date the animal came to the shelter.</p></div></div>
@@ -81,31 +81,24 @@
               <label class="field">Intake area / jurisdiction <span class="optional">optional</span><input name="intake_jurisdiction" list="jurisdictions-list" type="text" maxlength="120" placeholder="e.g. Santa Rosa"><datalist id="jurisdictions-list"><option value="SANTA ROSA"><option value="COUNTY"><option value="OUT OF COUNTY"><option value="ROHNERT PARK"><option value="PETALUMA"><option value="WINDSOR"><option value="HEALDSBURG"><option value="SEBASTOPOL"><option value="SONOMA"></datalist></label>
             </div></details>
 
-            <div class="form-actions"><button class="submit-btn" id="submit-btn" type="submit"><span id="submit-label">Predict stay</span><span aria-hidden="true">↗</span></button><button class="text-btn" id="example-btn" type="button">Example (Low Stay: ≤30d)</button><button class="text-btn" id="example-alert-btn" type="button">Example (Long Stay: &gt;30d)</button><button class="text-btn" id="clear-btn" type="button">Clear form</button></div>
+            <div class="form-actions"><button class="submit-btn" id="submit-btn" type="submit"><span id="submit-label">Predict stay</span><span aria-hidden="true">↗</span></button><button class="text-btn" id="example-btn" type="button">Try an example</button><button class="text-btn" id="example-alert-btn" type="button">Try another example</button><button class="text-btn" id="clear-btn" type="button">Clear form</button></div>
             <p id="form-error" class="form-error" role="alert" hidden></p>
           </form>
         </div>
 
         <aside class="result-column" aria-label="Prediction result">
-          <div class="result-card" id="result-card" aria-live="polite">
-            <div class="card-heading result-heading"><span class="card-icon lavender-icon" aria-hidden="true">✧</span><div><span class="step-label">STEP 02 / 02</span><h2>Your result</h2></div></div>
-            <div id="empty-state" class="empty-state"><div class="empty-art" aria-hidden="true"><span>🐾</span><i>✦</i></div><h3>Ready when you are!</h3><p>Fill in the details to see the predicted 30-day stay group.</p></div>
+          <div class="result-card" id="result-card" aria-live="polite" tabindex="-1">
+            <div class="card-heading result-heading"><span class="card-icon lavender-icon" aria-hidden="true">✧</span><div><span class="step-label">STEP 02 / 02</span><h2>Your stay estimate</h2></div></div>
+            <div id="empty-state" class="empty-state"><div class="empty-art" aria-hidden="true"><span>🐾</span><i>✦</i></div><h3>Ready when you are!</h3><p>Fill in the details to see whether the animal may stay longer than 30 days.</p></div>
             <div id="loading-state" class="loading-state" hidden><div class="spinner" aria-hidden="true"></div><h3>Checking the details…</h3><p>Just a moment.</p></div>
             <div id="prediction-state" class="prediction-state" hidden>
-              <div id="prediction-banner" class="prediction-banner"><span id="result-art" class="result-art" aria-hidden="true">🐾</span><p id="result-animal" class="result-animal" hidden></p><span class="prediction-caption">MODEL PREDICTION</span><h3 id="result-title"></h3><p id="result-message" class="result-message"></p></div>
-              <div class="score-panel" id="score-panel" style="margin-top: 18px;">
-                <div class="score-top"><span>Risk Score</span><strong id="score-value">0%</strong></div>
-                <div class="score-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div class="score-fill" id="score-fill"></div><div class="threshold-marker" id="threshold-marker" title="Validation-selected alert cutoff"></div></div>
-                <div class="score-labels"><span>0% (Lower score)</span><span id="threshold-label">Review cutoff</span><span>100% (Higher score)</span></div>
-                <p id="score-explainer"></p>
-              </div>
-              <div id="action-panel" style="margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: #fff8f5; border: 1px solid #f6ded5;">
-                <strong style="display:block; font-size: 11px; font-weight: 900; letter-spacing: 0.8px; color: #a45846; margin-bottom: 5px;">STAFF ACTION GUIDANCE</strong>
-                <p id="action-text" style="margin: 0; font-size: 13px; line-height: 1.5; color: #4b6256;"></p>
-              </div>
-              <div class="data-notes-wrap" id="data-notes-wrap" hidden>
-                <h4>Data &amp; Preprocessing Notes</h4>
-                <ul id="data-notes-list"></ul>
+              <div id="prediction-banner" class="prediction-banner"><span id="result-art" class="result-art" aria-hidden="true">🐾</span><p id="result-animal" class="result-animal" hidden></p><span class="prediction-caption">PREDICTED STAY</span><h3 id="result-title"></h3><p id="result-message" class="result-message"></p></div>
+              <div id="action-panel" class="action-panel">
+                <span class="action-kicker">A SIMPLE PLAN</span>
+                <h4>What to do next</h4>
+                <p id="action-text" class="action-intro"></p>
+                <div class="action-step"><span aria-hidden="true">1</span><p id="action-step-one"></p></div>
+                <div class="action-step"><span aria-hidden="true">2</span><p id="action-step-two"></p></div>
               </div>
               <div class="result-actions" id="result-actions">
                 <button type="button" id="print-tag-btn" class="action-btn primary-action-btn" title="Open printable shelter kennel intake card">
@@ -115,30 +108,15 @@
                   <span id="copy-icon" class="btn-icon" aria-hidden="true">📋</span> <span id="copy-text">Copy Record</span>
                 </button>
               </div>
-              <p class="result-footnote"><strong>Notice:</strong> This model predicts admission duration (&gt; 30 days) from intake data, regardless of outcome type (adoption, return to owner, or transfer). Staff must make all animal care and welfare decisions.</p>
+              <p class="result-footnote">This is an estimate, not a guarantee. Please use your usual care process and review each animal’s needs.</p>
             </div>
           </div>
           <div class="aside-note"><span class="aside-icon" aria-hidden="true">♡</span><div><strong>Made for shelter teams</strong><p>Based on Sonoma County, California, USA data. This is a student prototype, not a deployed shelter tool.</p></div></div>
 
-          <details class="more-details" style="margin-top: 14px; background: #fff; border-style: solid; border-color: #eeeae4;">
-            <summary style="padding: 14px 18px; font-size: 13px;">
-              <span><span class="plus" aria-hidden="true">📊</span> Model Architecture &amp; Methodology</span>
-              <span class="chevron" aria-hidden="true">⌄</span>
-            </summary>
-            <div class="details-content" style="padding: 0 18px 16px; font-size: 12px; line-height: 1.6; color: #53655b;">
-              <p style="margin: 8px 0 4px;"><strong>Algorithm:</strong> Tuned Random Forest (400 trees, <code>min_samples_leaf=1</code>, <code>max_features=0.5</code>, unlimited depth)</p>
-              <p style="margin: 4px 0;"><strong>Features:</strong> 183 encoded intake features plus 8 age interactions</p>
-              <p style="margin: 4px 0;"><strong>Training / validation / test:</strong> 6,096 / 1,163 / 1,672 admissions; stratified 3-fold cross-validation on training data</p>
-              <p style="margin: 4px 0;"><strong>Target Variable:</strong> <code>long_stay_30</code> (stay &gt; 30 days)</p>
-              <p style="margin: 4px 0;"><strong>Decision Cutoff:</strong> <strong>0.3758</strong>, selected to maximize positive-class F1 on validation data</p>
-              <p style="margin: 4px 0;"><strong>Held-out test results:</strong> 73.3% accuracy, 56.9% balanced accuracy, 30.6% long-stay recall. The majority-class baseline had 81.2% accuracy and 0% long-stay recall.</p>
-              <p style="margin: 4px 0;"><strong>Data Leakage Prevention:</strong> Only intake-known attributes used. Post-intake dates, disposition, and duration are strictly excluded.</p>
-            </div>
-          </details>
         </aside>
       </section>
     </main>
-    <footer><span>✿ PawPath <span class="footer-sep">·</span> KND_04</span><span>Predicting stays over 30 days from intake details.</span><a href="/docs">API docs ↗</a></footer>
+    <footer><span>✿ PawPath <span class="footer-sep">·</span> KND_04</span><span>Predicting stays over 30 days from intake details.</span></footer>
   </div>
 
   <!-- Printable Kennel Tag Template (Formatted for printing and physical kennel clipboards) -->
@@ -147,19 +125,19 @@
       <header class="tag-header">
         <div class="tag-header-left">
           <span class="tag-logo">🐾 PawPath Shelter Intake</span>
-          <span class="tag-subtitle">Sonoma County Animal Care &amp; Control · Admission Evaluation</span>
+          <span class="tag-subtitle">Student prototype based on Sonoma County shelter data</span>
         </div>
         <div class="tag-header-right">
-          <div class="tag-adm-num" id="tag-adm-id">ADM-2026-0001</div>
+          <div class="tag-adm-num" id="tag-adm-id">DEMO-2026-0001</div>
           <div class="tag-date" id="tag-print-date">Date: 2026-10-06</div>
         </div>
       </header>
 
       <div class="tag-alert-banner" id="tag-alert-banner">
-        <div class="tag-alert-icon" id="tag-alert-icon">⚠️</div>
+        <div class="tag-alert-icon" id="tag-alert-icon">🐾</div>
         <div class="tag-alert-text">
-          <div class="tag-alert-title" id="tag-alert-title">LONG STAY ALERT: &gt; 30 DAYS</div>
-          <div class="tag-alert-sub" id="tag-alert-sub">Score: 48.2% | Cutoff: 37.6% | Proactive Care Plan Recommended</div>
+          <div class="tag-alert-title" id="tag-alert-title">Predicted stay: More than 30 days</div>
+          <div class="tag-alert-sub" id="tag-alert-sub">For planning only. Review this animal’s needs individually.</div>
         </div>
       </div>
 
@@ -169,20 +147,20 @@
         <div class="tag-cell"><strong>Breed:</strong> <span id="tag-breed">Labrador Retriever</span></div>
         <div class="tag-cell"><strong>Color:</strong> <span id="tag-color">Black</span></div>
         <div class="tag-cell"><strong>Sex:</strong> <span id="tag-sex">Male (Neutered)</span></div>
-        <div class="tag-cell"><strong>Est. Age / DOB:</strong> <span id="tag-age">3.0 yrs (DOB: 2023-01-01)</span></div>
+        <div class="tag-cell"><strong>Age / DOB:</strong> <span id="tag-age">3.0 yrs (DOB: 2023-01-01)</span></div>
         <div class="tag-cell"><strong>Intake Date:</strong> <span id="tag-intake-date">2026-01-10</span></div>
         <div class="tag-cell"><strong>Intake Origin:</strong> <span id="tag-origin">Stray (Field)</span></div>
         <div class="tag-cell"><strong>Condition:</strong> <span id="tag-condition">Healthy</span></div>
         <div class="tag-cell tag-span-2"><strong>Jurisdiction:</strong> <span id="tag-jurisdiction">Santa Rosa</span></div>
       </div>
 
-      <div class="tag-section-title">CARE &amp; INTERVENTION CHECKLIST (STAFF USE)</div>
+      <div class="tag-section-title">STAFF CHECKLIST (COMPLETE AS APPROPRIATE)</div>
       <div class="tag-checklist">
         <div class="tag-check-item"><span>[ ]</span> <strong>Initial Medical &amp; Vaccine Triage</strong> — Vet health check completed</div>
         <div class="tag-check-item"><span>[ ]</span> <strong>Behavior &amp; Temperament Assessment</strong> — Logged in shelter database</div>
         <div class="tag-check-item"><span>[ ]</span> <strong>Enrichment &amp; Exercise Routine</strong> — Kennel enrichment scheduled</div>
-        <div class="tag-check-item" id="tag-foster-check"><span>[ ]</span> <strong>Foster &amp; Rescue Outreach</strong> — Flagged for proactive placement</div>
-        <div class="tag-check-item"><span>[ ]</span> <strong>Adoption Profile &amp; High-Quality Photos</strong> — Priority marketing</div>
+        <div class="tag-check-item"><span>[ ]</span> <strong>Foster &amp; Rescue Options</strong> — Consider if appropriate</div>
+        <div class="tag-check-item"><span>[ ]</span> <strong>Adoption Profile &amp; Photos</strong> — Prepare when appropriate</div>
       </div>
 
       <div class="tag-section-title">KENNEL &amp; STAFF LOG</div>
@@ -193,8 +171,8 @@
       </div>
 
       <footer class="tag-footer">
-        <span>PawPath Academic Decision Support System (KND_04 · FDM Mini Project)</span>
-        <span>Advisory prototype only. Staff retain full authority for care decisions.</span>
+        <span>PawPath student prototype (KND_04 · FDM Mini Project)</span>
+        <span>Estimate only. Staff decide care based on each animal’s needs.</span>
       </footer>
     </div>
   </aside>

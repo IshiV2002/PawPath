@@ -146,82 +146,62 @@ function showPrediction(result) {
   document.querySelector('#result-art').textContent = { DOG: '🐶', CAT: '🐱', OTHER: '🐾' }[form.elements.type.value] || '🐾';
   document.querySelector('#result-title').textContent = longStay ? 'More than 30 days' : '30 days or less';
   document.querySelector('#result-message').textContent = longStay
-    ? 'The model predicts this animal’s shelter stay will be longer than 30 days.'
-    : 'The model predicts this animal’s shelter stay will be 30 days or less.';
+    ? 'This animal may stay longer than 30 days. The estimate may be wrong.'
+    : 'This animal may leave within 30 days. The estimate may be wrong.';
 
-  // Render the model score and validation-selected review cutoff.
-  const scorePercent = (result.long_stay_score * 100).toFixed(1);
-  const thresholdPercent = (result.threshold * 100).toFixed(1);
-  const scoreValue = document.querySelector('#score-value');
-  const scoreFill = document.querySelector('#score-fill');
-  const scoreExplainer = document.querySelector('#score-explainer');
-  const thresholdMarker = document.querySelector('#threshold-marker');
-  const thresholdLabel = document.querySelector('#threshold-label');
-  if (scoreValue && scoreFill && scoreExplainer) {
-    scoreValue.textContent = `${scorePercent}%`;
-    scoreFill.style.width = `${Math.min(100, Math.round(result.long_stay_score * 100))}%`;
-    scoreExplainer.textContent = `Calculated score: ${result.long_stay_score.toFixed(3)}. The ${thresholdPercent}% review cutoff was selected on validation data to maximize positive-class F1. This model score is not a calibrated probability.`;
-    if (thresholdMarker) {
-      thresholdMarker.style.left = `${Math.min(100, Math.max(0, result.threshold * 100))}%`;
-      thresholdMarker.title = `Validation-selected review cutoff: ${thresholdPercent}%`;
-    }
-    if (thresholdLabel) thresholdLabel.textContent = `Review cutoff: ${thresholdPercent}%`;
-  }
-
-  // Render Actionable Staff Guidance
   const actionPanel = document.querySelector('#action-panel');
   const actionText = document.querySelector('#action-text');
   if (actionPanel && actionText) {
-    actionPanel.style.background = longStay ? '#fff4ef' : '#edf7f0';
-    actionPanel.style.borderColor = longStay ? '#f7dcd1' : '#d6ecdd';
-    const actionTitle = actionPanel.querySelector('strong');
-    if (actionTitle) {
-      actionTitle.style.color = longStay ? '#a45846' : '#3d7256';
-    }
+    actionPanel.classList.toggle('long-stay', longStay);
     actionText.textContent = longStay
-      ? 'Staff Review Suggested: The model score meets the review cutoff for a stay over 30 days. Review the known case details and consider whether additional support or follow-up is appropriate.'
-      : 'No long-stay alert at this cutoff. Continue the shelter’s usual intake and follow-up process; this result does not guarantee a short stay.';
-  }
-
-  // Render Data & Preprocessing Notes (Explainability)
-  const notesWrap = document.querySelector('#data-notes-wrap');
-  const notesList = document.querySelector('#data-notes-list');
-  if (notesWrap && notesList) {
-    notesList.innerHTML = '';
-    if (Array.isArray(result.data_notes) && result.data_notes.length > 0) {
-      result.data_notes.forEach(note => {
-        const li = document.createElement('li');
-        li.textContent = note;
-        notesList.appendChild(li);
-      });
-      notesWrap.hidden = false;
-    } else {
-      notesWrap.hidden = true;
-    }
+      ? 'This is a prompt to plan ahead. Staff still decide what this animal needs.'
+      : 'Keep the usual care routine. A shorter stay is not guaranteed.';
+    document.querySelector('#action-step-one').textContent = longStay
+      ? 'Check this animal’s health, behavior, and support needs.'
+      : 'Continue the normal intake and care plan.';
+    document.querySelector('#action-step-two').textContent = longStay
+      ? 'Review progress and consider suitable foster or adoption support.'
+      : 'Check progress and update the plan if the stay becomes longer.';
   }
 
   // Track latest prediction and populate printable kennel tag
   lastPrediction = result;
   populateKennelTag(result);
 
+  const workspace = document.querySelector('.workspace');
+  workspace.classList.add('has-prediction');
+  workspace.classList.toggle('long-stay', longStay);
   showState('prediction-state');
-  document.querySelector('#result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  const resultCard = document.querySelector('#result-card');
+  resultCard.focus({ preventScroll: true });
+  resultCard.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
 }
 
 let lastPrediction = null;
+let requestSequence = 0;
+
+function invalidatePrediction() {
+  requestSequence += 1;
+  lastPrediction = null;
+  document.querySelector('.workspace').classList.remove('has-prediction', 'long-stay');
+  submitButton.disabled = false;
+  submitLabel.textContent = 'Predict stay';
+  showState('empty-state');
+}
+
+form.addEventListener('input', invalidatePrediction);
+form.addEventListener('change', invalidatePrediction);
 
 function populateKennelTag(result) {
   const isOther = form.elements.type.value === 'OTHER';
   const animalName = isOther ? (otherAnimalInput.value.trim() || 'Other') : (form.elements.type.value === 'DOG' ? 'Dog' : 'Cat');
   const longStay = result.predicted_stay_group === 'MORE_THAN_30_DAYS';
-  const scorePercent = (result.long_stay_score * 100).toFixed(1);
-  const cutoffPercent = (result.threshold * 100).toFixed(1);
 
   // Deterministic intake identifier based on date and inputs
   const hashSeed = `${intakeDate.value}-${animalName}-${form.elements.breed.value || ''}`;
   let hashNum = 0;
   for (let i = 0; i < hashSeed.length; i++) hashNum = (hashNum * 31 + hashSeed.charCodeAt(i)) % 10000;
-  const admId = `ADM-${(intakeDate.value || today).replaceAll('-', '')}-${String(Math.abs(hashNum)).padStart(4, '0')}`;
+  const admId = `DEMO-${(intakeDate.value || today).replaceAll('-', '')}-${String(Math.abs(hashNum)).padStart(4, '0')}`;
 
   const setEl = (id, text) => {
     const el = document.querySelector(id);
@@ -239,7 +219,7 @@ function populateKennelTag(result) {
   setEl('#tag-condition', form.elements.intake_condition.value.trim() || 'Unknown');
   setEl('#tag-jurisdiction', form.elements.intake_jurisdiction.value.trim() || 'Not specified');
 
-  let ageStr = 'Unknown (Estimated from training medians)';
+  let ageStr = 'Unknown';
   if (birthDate.value && intakeDate.value) {
     const diffDays = (new Date(intakeDate.value) - new Date(birthDate.value)) / (1000 * 60 * 60 * 24);
     if (diffDays >= 0) {
@@ -252,21 +232,17 @@ function populateKennelTag(result) {
   const icon = document.querySelector('#tag-alert-icon');
   const title = document.querySelector('#tag-alert-title');
   const sub = document.querySelector('#tag-alert-sub');
-  const fosterItem = document.querySelector('#tag-foster-check');
-
   if (banner && icon && title && sub) {
     if (longStay) {
       banner.className = 'tag-alert-banner alert-high';
-      icon.textContent = '⚠️';
-      title.textContent = 'LONG STAY ALERT: STAY > 30 DAYS';
-      sub.textContent = `Risk Score: ${scorePercent}% | Cutoff: ${cutoffPercent}% | Proactive Care & Foster Review Suggested`;
-      if (fosterItem) fosterItem.style.fontWeight = 'bold';
+      icon.textContent = '🐾';
+      title.textContent = 'Predicted stay: More than 30 days';
+      sub.textContent = 'For planning only. Review this animal’s needs individually.';
     } else {
       banner.className = 'tag-alert-banner alert-low';
-      icon.textContent = '✓';
-      title.textContent = 'STANDARD ADMISSION: ≤ 30 DAYS';
-      sub.textContent = `Risk Score: ${scorePercent}% | Cutoff: ${cutoffPercent}% | Standard Shelter Intake Routine`;
-      if (fosterItem) fosterItem.style.fontWeight = 'normal';
+      icon.textContent = '🐾';
+      title.textContent = 'Predicted stay: 30 days or less';
+      sub.textContent = 'For planning only. The stay could be longer.';
     }
   }
 }
@@ -295,9 +271,6 @@ if (copySummaryBtn && copyText) {
     const conditionStr = form.elements.intake_condition.value.trim() || 'Unknown';
     const originStr = `${form.elements.intake_type.value || 'Unknown'}${form.elements.intake_subtype.value ? ' (' + form.elements.intake_subtype.value + ')' : ''}`;
     const jurisdictionStr = form.elements.intake_jurisdiction.value.trim() || 'Not specified';
-    const scorePct = (lastPrediction.long_stay_score * 100).toFixed(1);
-    const cutoffPct = (lastPrediction.threshold * 100).toFixed(1);
-
     const record = [
       '====================================================',
       'PAWPATH ANIMAL SHELTER INTAKE & STAY ASSESSMENT',
@@ -309,14 +282,12 @@ if (copySummaryBtn && copyText) {
       `Arrival Origin:    ${originStr}`,
       `Condition:         ${conditionStr}`,
       `Jurisdiction:      ${jurisdictionStr}`,
-      `Age Status:        ${lastPrediction.age_estimated ? 'Estimated from training medians' : birthDate.value}`,
+      `Age / Birth Date:  ${birthDate.value || 'Unknown'}`,
       '----------------------------------------------------',
       '30-DAY STAY PREDICTION RESULT',
       '----------------------------------------------------',
-      `Stay Group:        ${lastPrediction.predicted_stay_group === 'MORE_THAN_30_DAYS' ? 'MORE THAN 30 DAYS (ALERT)' : '30 DAYS OR LESS (STANDARD)'}`,
-      `Model Risk Score:  ${scorePct}% (Validation Review Cutoff: ${cutoffPct}%)`,
-      `Staff Decision:    ${lastPrediction.decision}`,
-      `Advisory Notice:   ${lastPrediction.score_note}`,
+      `Predicted Stay:    ${lastPrediction.predicted_stay_group === 'MORE_THAN_30_DAYS' ? 'MORE THAN 30 DAYS' : '30 DAYS OR LESS'}`,
+      'Planning Note:     This estimate may be wrong. Staff decide care based on individual needs.',
       '===================================================='
     ].join('\n');
 
@@ -357,28 +328,35 @@ form.addEventListener('submit', async event => {
   submitButton.disabled = true;
   submitLabel.textContent = 'Checking…';
   showState('loading-state');
+  const requestId = ++requestSequence;
   try {
     const response = await fetch('/predict', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestFromForm()), signal: AbortSignal.timeout(20000)
     });
     const body = await response.json();
+    if (requestId !== requestSequence) return;
     if (!response.ok) throw new Error(friendlyApiError(body, response.status));
     showPrediction(body);
   } catch (error) {
+    if (requestId !== requestSequence) return;
+    lastPrediction = null;
+    document.querySelector('.workspace').classList.remove('has-prediction', 'long-stay');
     showState('empty-state');
     showError(error.name === 'TimeoutError' || error.name === 'AbortError'
       ? 'The check took too long. Please try again.'
       : error instanceof TypeError ? 'Could not reach the backend. Check that it is running, then try again.' : error.message);
   } finally {
-    submitButton.disabled = false;
-    submitLabel.textContent = 'Predict stay';
+    if (requestId === requestSequence) {
+      submitButton.disabled = false;
+      submitLabel.textContent = 'Predict stay';
+    }
   }
 });
 
-// Example 1: Low-Risk Admission (<= 30 days)
+// First example admission
 document.querySelector('#example-btn').addEventListener('click', () => {
-  form.reset(); clearError(); showState('empty-state'); syncOtherAnimal();
+  invalidatePrediction(); form.reset(); clearError(); syncOtherAnimal();
   form.elements.type.value = 'DOG';
   form.elements.intake_date.value = '2026-01-10';
   form.elements.date_of_birth.value = '2023-01-01';
@@ -394,11 +372,11 @@ document.querySelector('#example-btn').addEventListener('click', () => {
   document.querySelector('.more-details').open = true;
 });
 
-// Example 2: High-Risk Admission (> 30 days alert, Case 8020)
+// Second example admission
 const exampleAlertBtn = document.querySelector('#example-alert-btn');
 if (exampleAlertBtn) {
   exampleAlertBtn.addEventListener('click', () => {
-    form.reset(); clearError(); showState('empty-state'); syncOtherAnimal();
+    invalidatePrediction(); form.reset(); clearError(); syncOtherAnimal();
     form.elements.type.value = 'DOG';
     form.elements.intake_date.value = '2026-01-01';
     form.elements.date_of_birth.value = '2018-07-17';
@@ -416,7 +394,7 @@ if (exampleAlertBtn) {
 }
 
 document.querySelector('#clear-btn').addEventListener('click', () => {
-  form.reset(); clearError(); showState('empty-state'); syncOtherAnimal();
+  invalidatePrediction(); form.reset(); clearError(); syncOtherAnimal();
   syncDateBounds();
   syncBreeds();
   document.querySelector('.more-details').open = false;
