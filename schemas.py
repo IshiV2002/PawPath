@@ -81,3 +81,25 @@ class PredictionOutput(BaseModel):
     data_notes: list[str]
     score_note: str
     scope: str
+
+
+class CaseCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    animal: AnimalInput
+    animal_label: str = Field(default="", max_length=60)
+    review_date: date | None = None
+    review_note: str = Field(default="", max_length=500)
+
+    @model_validator(mode="after")
+    def review_after_intake(self):
+        if self.review_date and self.review_date < self.animal.intake_date:
+            raise ValueError("Review date cannot be before intake date.")
+        return self
+
+
+class CaseUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    review_date: date | None = None
+    review_note: str | None = Field(default=None, max_length=500)
+    review_done: bool | None = None
+    outcome_date: date | None = None

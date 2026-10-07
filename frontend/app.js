@@ -133,7 +133,7 @@ function friendlyApiError(body, status) {
   return typeof body.detail === 'string' ? body.detail : `The server returned an error (${status}). Please try again.`;
 }
 
-function showPrediction(result) {
+function showPrediction(result, animalInput) {
   if (!['MORE_THAN_30_DAYS', '30_DAYS_OR_LESS'].includes(result.predicted_stay_group)) {
     throw new Error('The server returned an unexpected prediction.');
   }
@@ -164,8 +164,18 @@ function showPrediction(result) {
       : 'Check progress and update the plan if the stay becomes longer.';
   }
 
+  const missing = [];
+  if (result.age_estimated) missing.push('birth date');
+  if (!animalInput.intake_condition || animalInput.intake_condition.toUpperCase() === 'UNKNOWN') missing.push('condition at intake');
+  const missingNote = document.querySelector('#missing-detail-note');
+  missingNote.hidden = missing.length === 0;
+  missingNote.textContent = missing.length
+    ? `Check details: ${missing.join(' and ')} ${missing.length === 1 ? 'is' : 'are'} unknown. Add them if available and run the prediction again.`
+    : '';
+
   // Track latest prediction and populate printable kennel tag
   lastPrediction = result;
+  lastPredictionInput = animalInput;
   populateKennelTag(result);
 
   const workspace = document.querySelector('.workspace');
@@ -178,15 +188,19 @@ function showPrediction(result) {
 }
 
 let lastPrediction = null;
+let lastPredictionInput = null;
 let requestSequence = 0;
+window.PawPathCurrent = () => ({ prediction: lastPrediction, animal: lastPredictionInput });
 
 function invalidatePrediction() {
   requestSequence += 1;
   lastPrediction = null;
+  lastPredictionInput = null;
   document.querySelector('.workspace').classList.remove('has-prediction', 'long-stay');
   submitButton.disabled = false;
   submitLabel.textContent = 'Predict stay';
   showState('empty-state');
+  window.dispatchEvent(new Event('pawpath:prediction-cleared'));
 }
 
 form.addEventListener('input', invalidatePrediction);
@@ -329,18 +343,20 @@ form.addEventListener('submit', async event => {
   submitLabel.textContent = 'Checking…';
   showState('loading-state');
   const requestId = ++requestSequence;
+  const animalInput = requestFromForm();
   try {
     const response = await fetch('/predict', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestFromForm()), signal: AbortSignal.timeout(20000)
+      body: JSON.stringify(animalInput), signal: AbortSignal.timeout(20000)
     });
     const body = await response.json();
     if (requestId !== requestSequence) return;
     if (!response.ok) throw new Error(friendlyApiError(body, response.status));
-    showPrediction(body);
+    showPrediction(body, animalInput);
   } catch (error) {
     if (requestId !== requestSequence) return;
     lastPrediction = null;
+    lastPredictionInput = null;
     document.querySelector('.workspace').classList.remove('has-prediction', 'long-stay');
     showState('empty-state');
     showError(error.name === 'TimeoutError' || error.name === 'AbortError'

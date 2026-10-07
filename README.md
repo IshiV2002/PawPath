@@ -5,13 +5,13 @@ animal details and predicts whether the shelter stay will be more than 30 days
 or 30 days or less.
 This is a local academic prototype using Sonoma County, California, USA data.
 The saved model can be wrong; the result is not a guarantee or a care decision.
+Staff can save a follow-up, later record a departure date, and view historical
+group patterns screened against a later validation period.
 
 ## Run on your Windows PC
 
 Use **Python 3.12**. Clone this repository (or extract the ZIP), open its folder
-in VS Code, and run these commands in that folder's terminal:
-
-Then run these commands one at a time from that folder:
+in VS Code, and run these commands one at a time in that folder's terminal:
 
 ```powershell
 py -3.12 -m venv .venv
@@ -38,12 +38,27 @@ The model libraries are pinned to the versions used when this model was saved.
    or **30 days or less**. It is a prediction, not a guaranteed stay length.
 5. Use **Print Kennel Tag** to generate a print-formatted shelter intake tag with a
    staff care checklist, or **Copy Record** to copy structured intake notes to your clipboard.
+6. Choose **Save follow-up** to add a case label, review date and staff note. The
+   **Saved follow-ups** board can mark a review done and record a real departure
+   date. The actual stay appears only after a departure date is entered.
+7. **Patterns in past admissions** shows group counts from older training records
+   and later validation records. These are exploratory associations, not explanations for an
+   individual animal or instructions to change its care.
 
 The screen is served by the same local FastAPI app, so it needs no separate
-frontend installation or internet connection. It does not save entered details.
+frontend installation or internet connection. Entered details are saved only
+when **Save follow-up** is clicked. Saved cases stay in the local file
+`data/pawpath.sqlite3`, which Git ignores; another PC does not see them. Use
+**Delete case** to remove a saved case. This is a local demonstration bound to
+127.0.0.1, without user accounts or shared access.
 The animal illustration is decorative; it is not part of the prediction.
 The entered name for **Other** appears in the result, but the saved model sees
 only the broad **OTHER** type. Entering a different name does not change its score.
+
+The case API also offers `POST /cases`, `GET /cases`, `PATCH /cases/{case_id}` and
+`DELETE /cases/{case_id}`. `POST /cases` recomputes the prediction on the server;
+the browser cannot submit an invented predicted group. A departure date must be
+between intake and today. A stay of exactly 30 days belongs to the shorter group.
 
 ## Try the API directly
 
@@ -84,14 +99,17 @@ Types: DOG, CAT, OTHER. Sex: MALE, FEMALE, UNKNOWN; NEUTERED/SPAYED aliases are 
 accepted and mapped to biological sex as in preprocessing. Put species outside dogs
 and cats under OTHER, as in the dataset. Optional categories accept text and the
 saved pipeline handles rare/new values. Outcome fields and caller-supplied cutoffs
-are rejected. No data is stored by this API.
+are rejected. **POST /predict** does not store data; **POST /cases** stores a
+follow-up on this computer only when you choose to save it.
 
 ## Files and simple viva explanation
 
 - **schemas.py**: “We check the user input and reject invalid dates or fields.”
 - **predictor.py**: “We load the saved Step 5 preprocessing and tuned Random Forest once.
   The review cutoff of 0.375833 was chosen on validation data.”
-- **main.py**: “This receives requests and sends predictions back to the user screen.”
+- **main.py**: “This receives prediction requests and lets staff save follow-ups.”
+- **cases.py**: “This saves local follow-ups and records actual departure dates later.”
+- **analysis/**: “This checks older-to-later model results and finds historical group patterns.”
 - **artifacts/**: original model, preprocessing helper and saved policy. Keep together.
 - **tests/**: checks for valid/invalid requests, missing details, rare values,
   prediction consistency, the cutoff boundary and changed model files.
@@ -130,6 +148,38 @@ the care decisions. The backend is not a deployment or evidence of welfare benef
 The web screen and API are included. To help improve the project, see
 [CONTRIBUTING.md](CONTRIBUTING.md). The group can add useful UI features and
 include the finished demo in its report.
+
+## New analysis evidence
+
+`analysis/association_rules.py` reads the raw training and validation admission
+CSVs from the earlier notebook workflow. It uses only intake details and the
+historical target, keeps aggregate counts, and writes `frontend/insights.json`.
+The four patterns were selected using both training and validation records, so
+their displayed validation rates are exploratory, not independent confirmation.
+The committed JSON contains no animal IDs or names and uses no test labels. To
+refresh it with the original CSVs placed in
+the sibling `step3_results` folder, run:
+
+```powershell
+.\.venv\Scripts\python.exe analysis/association_rules.py --records-dir ..\step3_results
+```
+
+`analysis/temporal_validation.py` checks four model families and the selected
+forest on three older-to-later folds inside training data. Each fold learns
+preprocessing from its own older rows, leaves a 31-day gap, and keeps animal IDs
+out of both sides. It does not read validation/test CSVs, select a new deployed
+model or replace the saved test result. The same check can be run from
+`analysis/Temporal_Validation_Audit.ipynb` after opening this repository as the
+notebook working folder. Or reproduce it in the terminal with:
+
+```powershell
+.\.venv\Scripts\python.exe analysis/temporal_validation.py --records-dir ..\step3_results
+```
+
+The resulting evidence is in `analysis/temporal_validation_results.csv` and
+`.json`. See [analysis/EVIDENCE.md](analysis/EVIDENCE.md) before citing these
+figures in a report. Source dataset: [County of Sonoma Animal Shelter Intake and
+Outcome](https://data.sonomacounty.ca.gov/Government/Animal-Shelter-Intake-and-Outcome/924a-vesw).
 
 References: [FastAPI request bodies](https://fastapi.tiangolo.com/tutorial/body/),
 [FastAPI testing](https://fastapi.tiangolo.com/tutorial/testing/).

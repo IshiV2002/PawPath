@@ -8,6 +8,7 @@
   <link rel="icon" href="/static/assets/paw.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/styles.css">
   <script src="/static/app.js" defer></script>
+  <script src="/static/extra.js" defer></script>
 </head>
 <body>
   <div class="page-shell">
@@ -100,6 +101,7 @@
                 <div class="action-step"><span aria-hidden="true">1</span><p id="action-step-one"></p></div>
                 <div class="action-step"><span aria-hidden="true">2</span><p id="action-step-two"></p></div>
               </div>
+              <p id="missing-detail-note" class="missing-detail-note" hidden></p>
               <div class="result-actions" id="result-actions">
                 <button type="button" id="print-tag-btn" class="action-btn primary-action-btn" title="Open printable shelter kennel intake card">
                   <span class="btn-icon" aria-hidden="true">🏷️</span> Print Kennel Tag
@@ -107,13 +109,36 @@
                 <button type="button" id="copy-summary-btn" class="action-btn secondary-action-btn" title="Copy structured intake record to clipboard">
                   <span id="copy-icon" class="btn-icon" aria-hidden="true">📋</span> <span id="copy-text">Copy Record</span>
                 </button>
+                <button type="button" id="open-save-btn" class="action-btn secondary-action-btn">Save follow-up</button>
               </div>
+              <form id="save-case-form" class="save-case-form" hidden>
+                <div><span class="section-kicker">KEEP TRACK</span><h4>Save a follow-up</h4><p>Give this case a label and choose when to check it again.</p></div>
+                <div class="save-case-fields">
+                  <label class="field">Animal name or shelter ID <span class="optional">optional</span><input id="case-label" type="text" maxlength="60" placeholder="e.g. Bella or A12345"></label>
+                  <label class="field">Review date <span class="optional">optional</span><input id="case-review-date" type="date"></label>
+                </div>
+                <label class="field">Staff note <span class="optional">optional</span><input id="case-note" type="text" maxlength="500" placeholder="e.g. Check progress next week"></label>
+                <div class="save-case-actions"><button class="submit-btn" id="save-case-btn" type="submit">Save case</button><button class="text-btn" id="cancel-save-btn" type="button">Cancel</button></div>
+                <p id="save-case-message" class="form-error" role="status" hidden></p>
+              </form>
               <p class="result-footnote">This is an estimate, not a guarantee. Please use your usual care process and review each animal’s needs.</p>
             </div>
           </div>
           <div class="aside-note"><span class="aside-icon" aria-hidden="true">♡</span><div><strong>Made for shelter teams</strong><p>Based on Sonoma County, California, USA data. This is a student prototype, not a deployed shelter tool.</p></div></div>
 
         </aside>
+      </section>
+      <section class="followup-section" id="followup-board" aria-labelledby="followup-title">
+        <div class="section-heading"><div><span class="section-kicker">STAY ON TRACK</span><h2 id="followup-title">Saved follow-ups</h2></div><p>Review saved cases and add actual departure dates when known. Cases stay on this computer’s local server.</p></div>
+        <p id="case-board-message" class="board-message" role="status" hidden></p>
+        <p id="case-summary" class="case-summary"></p>
+        <div id="case-list" class="case-list"></div>
+      </section>
+      <section class="insights-section" id="historical-patterns" aria-labelledby="insights-title">
+        <div class="section-heading"><div><span class="section-kicker">WHAT THE DATA SHOWED</span><h2 id="insights-title">Patterns in past admissions</h2></div><p>These are group patterns from Sonoma County records. They cannot explain an individual prediction or tell staff what caused a longer stay.</p></div>
+        <p id="insights-summary" class="insights-summary"></p>
+        <div id="insights-list" class="insights-list"></div>
+        <p class="insights-note">These patterns describe past admissions, not why one animal received its prediction. Some recorded intake details may have been updated later.</p>
       </section>
     </main>
     <footer><span>✿ PawPath <span class="footer-sep">·</span> KND_04</span><span>Predicting stays over 30 days from intake details.</span></footer>
